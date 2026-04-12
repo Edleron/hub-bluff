@@ -61,6 +61,20 @@ Versiyon **2 noktadan** yonetilir:
 
 > Versiyon degistirmek = bu 2 dosyayi guncelle. Diger dosyalar (Dockerfile dummy, lock file) otomatik guncellenir.
 
+## CI/CD — Deploy
+
+Commit mesajinda `[deploy]` keyword'u varsa GitHub Actions uzerinden Render (server) ve Cloudflare Pages (client) otomatik deploy edilir. Keyword yoksa deploy tetiklenmez.
+
+```bash
+# Normal commit — deploy OLMAZ
+git commit -m "fix: button rengi duzeltildi"
+
+# Deploy commit — Render + Cloudflare guncellenir
+git commit -m "feat: yeni ozellik eklendi [deploy]"
+```
+
+> Detaylar: `docs/DEPLOYMENT.md` (Adim 2.6 ve 3.6)
+
 ## Port Haritasi
 
 - server: 3001 (HTTP + WebSocket)
