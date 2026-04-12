@@ -1,0 +1,39 @@
+## Bluff — Local Development
+## Kullanim:
+##   docker-compose build     (ilk seferde veya dep degisince)
+##   docker-compose up        (server + client baslatir)
+##   docker-compose down      (durdurur)
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./server/src:/app/server/src
+      - ./server/tsconfig.json:/app/server/tsconfig.json
+    command: pnpm --filter server start:dev
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./client/src:/app/client/src
+      - ./client/raw-assets:/app/client/raw-assets
+      - ./client/scripts:/app/client/scripts
+      - ./client/vite.config.ts:/app/client/vite.config.ts
+      - ./client/tsconfig.json:/app/client/tsconfig.json
+      - ./client/index.html:/app/client/index.html
+      - ./client/.assetpack:/app/client/.assetpack
+    command: sh -c "cd client && pnpm dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_SERVER_URL=http://localhost:3001
+    depends_on:
+      - server
