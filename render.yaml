@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bluff-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
