@@ -1,6 +1,6 @@
-# Shade — Deployment Rehberi
+# Bluff— Deployment Rehberi
 
-Bu rehber Shade oyununu production ortamina deploy etme adimlaridir.
+Bu rehber Bluff oyununu production ortamina deploy etme adimlaridir.
 
 ## Mimari
 
@@ -52,7 +52,7 @@ Henuz kurulu degilse:
 
 ```bash
 git clone <repo-url>
-cd HubShade
+cd HubBluff
 ```
 
 ### 1.3 Docker image'larini build et
@@ -73,7 +73,7 @@ docker-compose up
 Terminalde su loglar gorunmeli:
 
 ```
-server-1  | Shade server running on http://localhost:3001
+server-1  | Bluff server running on http://localhost:3001
 server-1  | WebSocket namespace: /game
 client-1  | VITE v6.x.x ready in xxx ms
 client-1  |   ➜  Local:   http://localhost:5173/
@@ -89,10 +89,10 @@ client-1  |   ➜  Local:   http://localhost:5173/
 
 > **Oyuncular:**
 >
-> | Oyuncu | Rol | Aciklama |
-> | ------ | --- | -------- |
-> | `edleron` | Host | Oyun ayarlarini secer (deste, blof) |
-> | `wilkagul` | Guest | Direkt odaya katilir, ayar yapmaz |
+> | Oyuncu       | Rol   | Aciklama                            |
+> | ------------ | ----- | ----------------------------------- |
+> | `edleron`  | Host  | Oyun ayarlarini secer (deste, blof) |
+> | `wilkagul` | Guest | Direkt odaya katilir, ayar yapmaz   |
 >
 > Oyun bitince veya sekme kapatilinca oda resetlenir.
 
@@ -162,7 +162,7 @@ cd client && pnpm dev
 2. **"Web Service"** sec
 3. GitHub repo'nu bagla:
    - Ilk seferde **"Connect GitHub"** tikla ve Render'a repo erisimi ver
-   - Shade repo'sunu sec (ornegin `HubShade`)
+   - Bluff repo'sunu sec (ornegin `HubBluff`)
 
 ### 2.3 Service ayarlari
 
@@ -170,7 +170,7 @@ Render sana ayarlari soracak. Su sekilde doldur:
 
 | Ayar                    | Deger                                            |
 | ----------------------- | ------------------------------------------------ |
-| **Name**          | `shade-server`                                 |
+| **Name**          | `bluff-server`                                 |
 | **Region**        | `Frankfurt (EU Central)` (veya en yakin bolge) |
 | **Branch**        | `main`                                         |
 | **Runtime**       | `Docker`                                       |
@@ -196,7 +196,7 @@ Render dashboard'da projenin **"Environment"** sekmesine git:
 2. Render build'i baslatacak (~3-5dk ilk seferde)
 3. Tamamlaninca sana bir URL verecek, ornegin:
    ```
-   https://shade-server-kink.onrender.com
+   https://bluff-server-kink.onrender.com
    ```
 4. **Bu URL'yi kopyala** — Client deploy'da lazim olacak
 
@@ -223,7 +223,7 @@ Render dashboard'da projenin **"Environment"** sekmesine git:
 
 ```bash
 # Tarayicidan veya terminal'den
-curl https://shade-server-kink.onrender.com/rooms
+curl https://bluff-server-kink.onrender.com/rooms
 
 # Bos array donmeli: []
 ```
@@ -248,17 +248,17 @@ curl https://shade-server-kink.onrender.com/rooms
 3. **"Pages"** sekmesini sec
 4. **"Connect to Git"** tikla
 5. GitHub hesabini bagla
-6. Shade repo'sunu sec
+6. Bluff repo'sunu sec
 
 ### 3.3 Build ayarlari
 
 Cloudflare sana build ayarlarini soracak. Su sekilde doldur:
 
-| Ayar                         | Deger                                        |
-| ---------------------------- | -------------------------------------------- |
-| **Framework preset**   | `None`                                     |
-| **Build command**      | `npx pnpm install && npx pnpm --filter web-plate build` |
-| **Build output directory** | `client/dist`                            |
+| Ayar                             | Deger                                                     |
+| -------------------------------- | --------------------------------------------------------- |
+| **Framework preset**       | `None`                                                  |
+| **Build command**          | `npx pnpm install && npx pnpm --filter web-plate build` |
+| **Build output directory** | `client/dist`                                           |
 
 > **NOT:** Cloudflare varsayilan olarak `npm` kullanir ve `pnpm` workspace
 > yapisini tanimaz. Bu yuzden build command icinde `npx pnpm install` ile
@@ -269,10 +269,10 @@ Cloudflare sana build ayarlarini soracak. Su sekilde doldur:
 
 **"Advanced Settings"** bolumunu ac ve su degiskenleri ekle:
 
-| Degisken            | Deger                                      | Aciklama               |
-| ------------------- | ------------------------------------------ | ---------------------- |
-| `VITE_SERVER_URL` | `https://bluff-server.onrender.com`      | Render'dan aldigin URL |
-| `NODE_VERSION`    | `22`                                     | Node.js versiyonu      |
+| Degisken            | Deger                                 | Aciklama               |
+| ------------------- | ------------------------------------- | ---------------------- |
+| `VITE_SERVER_URL` | `https://bluff-server.onrender.com` | Render'dan aldigin URL |
+| `NODE_VERSION`    | `22`                                | Node.js versiyonu      |
 
 > **ONEMLI:** `VITE_SERVER_URL` degeri Render'dan aldigin domain olmali.
 > Sonunda `/` OLMAMALI.
@@ -283,7 +283,7 @@ Cloudflare sana build ayarlarini soracak. Su sekilde doldur:
 2. Cloudflare build'i baslatacak (~1-2dk)
 3. Tamamlaninca sana bir URL verecek:
    ```
-   https://shade.pages.dev
+   https://bluff.pages.dev
    ```
 
 ### 3.6 Auto-Deploy kapat + Deploy Hook al
@@ -301,7 +301,7 @@ Cloudflare sana build ayarlarini soracak. Su sekilde doldur:
 
 ### 3.7 Test et
 
-1. Tarayicida `https://shade.pages.dev` ac
+1. Tarayicida `https://bluff.pages.dev` ac
 2. Token gir: `edleron`
 3. "Giris" tikla
 4. Oda kur, ikinci tarayicida diger token ile katil
@@ -317,7 +317,7 @@ Cloudflare sana build ayarlarini soracak. Su sekilde doldur:
 
 1. Pages projesinin **"Custom domains"** sekmesine git
 2. **"Set up a custom domain"** tikla
-3. Domain'ini gir (ornegin `shade.edleron.com`)
+3. Domain'ini gir (ornegin `bluff.edleron.com`)
 4. DNS kayitlarini Cloudflare otomatik ayarlar
 
 ### Render icin
