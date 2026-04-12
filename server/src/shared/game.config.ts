@@ -1,7 +1,7 @@
 import { DEFAULT_DECK_CONFIG, DeckConfig } from './types';
 
 // Versiyon — client'a da gonderilir (login response)
-export const GAME_VERSION = '0.0.5';
+export const GAME_VERSION = '0.0.1';
 
 // ═══════════════════════════════════════════════════════
 //  DESTE YAPISINI DEGISTIRMEK ICIN SADECE BU SATIRI

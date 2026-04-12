@@ -1,7 +1,7 @@
 {
   "name": "hub-bluff",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.1",
   "description": "Bluff pişti-based multiplayer card game",
   "scripts": {
     "server:dev": "pnpm --filter server start:dev",
