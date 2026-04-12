@@ -1,0 +1,16 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    if: contains(github.event.head_commit.message, '[deploy]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Server (Render)
+        run: curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+      - name: Deploy Client (Cloudflare Pages)
+        run: curl -s -X POST "${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}"
