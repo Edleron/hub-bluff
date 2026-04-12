@@ -90,11 +90,13 @@ client/
 │   │   ├── ui/
 │   │   │   ├── Button.ts
 │   │   │   ├── Label.ts
-│   │   │   └── RoundedBox.ts
+│   │   │   ├── RoundedBox.ts
+│   │   │   ├── ScorePanel.ts   → Scrollable puan detay paneli
+│   │   │   └── VolumeSlider.ts → Ses ayar slider'i
 │   │   └── popups/
 │   │       ├── PausePopup.ts
 │   │       └── SettingsPopup.ts
-│   ├── engine/              → Navigation, resize, audio, state plugins
+│   ├── engine/              → Navigation, resize, audio, state (XState) plugins
 │   ├── game/
 │   │   ├── session.ts       → Oyuncu token, playerId, roomId
 │   │   ├── index.ts         → Barrel export
@@ -110,8 +112,12 @@ client/
 │   └── shared/              → Ortak tipler (server ile ayni, manual sync)
 ├── public/
 │   └── assets/
-│       ├── cards/           → 7_spades.png, K_hearts.png ...
-│       └── back.png
+│       ├── preload/         → logo.png/webp (responsive 0.5x)
+│       └── main/            → Spritesheet'ler + sesler
+│           ├── cards.png/webp + cards.png.json  → Kart atlas'i (frame: 7_spades.png)
+│           ├── ui.png/webp + ui.png.json        → UI atlas'i
+│           ├── logo-white.png/webp              → Beyaz logo
+│           └── sounds/                          → bgm-main, sfx-hover, sfx-press
 ├── vite.config.ts
 └── tsconfig.json
 ```
@@ -141,9 +147,29 @@ Her adim onceki tamamlanana kadar defer edilir:
 - `_deferredGameOver`: deal bitene kadar gameOver beklenir
 - `animLayer`: cross-container kart hareketi icin ozel Container (toGlobal/toLocal ile koordinat donusumu)
 
+## State Machine (XState)
+
+```typescript
+// engine/state/appMachine.ts
+boot → INIT_COMPLETE → loading → LOADED → main
+main: idle ↔ paused (PAUSE/RESUME)
+main: idle ↔ settings (OPEN_SETTINGS/CLOSE_SETTINGS)
+```
+
+XState 5 ile uygulama durumu yonetilir. StatePlugin olarak PixiJS'e entegre edilmistir.
+
+## Session (game/session.ts)
+
+Login sonrasi set edilen singleton:
+- `token`: Auth token
+- `playerId`: Oyuncu ID
+- `nickname`: Kullanici adi
+- `roomId`: Oda ID
+- `isLoggedIn`: Token set edilmis mi
+
 ## Notlar
 
 - BigPool pattern: ekranlar tekrar kullanilir, `reset()` tum state'i temizlemeli
 - CardSprite: `destroy()` override ile memory leak onlenir
-- Pos, scale, animasyon, game feel → senior PixiJS developer halleder
-- Step 2'de VFX eklenir (screen shake, particles, vignette, ses)
+- Asset'ler spritesheet olarak paketlenmis (AssetPack ile), bireysel PNG degil
+- Kart frame isimleri: `7_spades.png`, `K_hearts.png`, `joker.png` (atlas icinde)

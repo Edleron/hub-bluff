@@ -11,17 +11,16 @@ hub-bluff/
 │   │   ├── game/        → Socket Gateway + GameService (oyun state yonetimi)
 │   │   ├── engine/      → Oyun motoru (deck, rules, scoring) — pure TS
 │   │   └── shared/      → Ortak tipler (ICard, IRoomState, EVENTS, DeckConfig)
-│   └── test/            → Jest unit testler (engine icin)
 ├── client/              → PixiJS + Vite
 │   ├── src/
 │   │   ├── app/         → Screens (LobbyScreen, GameScreen, GameOverScreen, LoadScreen)
-│   │   │   └── ui/      → Button, Label, RoundedBox
-│   │   ├── engine/      → Navigation, resize, audio, state plugins
+│   │   │   ├── ui/      → Button, Label, RoundedBox, ScorePanel, VolumeSlider
+│   │   │   └── popups/  → PausePopup, SettingsPopup
+│   │   ├── engine/      → Navigation, resize, audio, state (XState appMachine) plugins
 │   │   ├── game/        → Session, services (ApiService, SocketService), components (CardSprite), utils
 │   │   └── shared/      → server/src/shared'dan kopyalanan tipler
-│   └── public/          → Asset'ler (kart gorselleri)
-├── docs/                → Dokumantasyon (guncel MVP)
-├── docs/v2/             → Eski 4-proje plani (Step 3 referansi)
+│   └── public/          → Asset'ler (spritesheet: cards.png/webp + JSON atlas)
+├── docs/                → Dokumantasyon
 └── package.json         → Root (pnpm workspace)
 ```
 
@@ -108,7 +107,7 @@ export const DEFAULT_DECK_CONFIG: DeckConfig = {
   deckCount: 1, includeJokers: false, jokersPerDeck: 0
 };
 export const DOUBLE_DECK_CONFIG: DeckConfig = {
-  deckCount: 2, includeJokers: true, jokersPerDeck: 1
+  deckCount: 2, includeJokers: true, jokersPerDeck: 2
 };
 
 export interface ICard { suit: Suit; rank: Rank; id: string }
@@ -158,17 +157,20 @@ export const EVENTS_S2C = {
 | Tek deste (52, jokersiz) | Sadece ayni rank | S7 = H7 ✓ |
 | Cift deste (108, jokerli) | Sadece ayni rank | S7 = H7 ✓ (rank-only, suit farketmez) |
 
-## DeckConfig Yonetimi (TEK NOKTADAN DEGISTIR)
+## DeckConfig Yonetimi
 
-Deste yapisi tek bir config dosyasindan kontrol edilir:
+Deste secimi **runtime'da** yapilir. Host oyuncu lobby'de Tek/Cift deste + Blof Acik/Kapali secer.
 
 ```typescript
-// shared/game.config.ts — TEK KAYNAK
-export const ACTIVE_DECK_CONFIG: DeckConfig = DEFAULT_DECK_CONFIG;
-// export const ACTIVE_DECK_CONFIG: DeckConfig = DOUBLE_DECK_CONFIG;
+// shared/types.ts → GameConfig
+interface GameConfig {
+  deckType: 'single' | 'double';
+  bluffEnabled: boolean;
+}
 ```
 
-Deste degistirmek icin: `game.config.ts` icinde tek satir degistir → build et → bitti.
+Host `JOIN_ROOM` event'inde config gonderir → `GameService.startGame()` bunu kullanir.
+`game.config.ts` icindeki `ACTIVE_DECK_CONFIG` fallback olarak kalir.
 
 ## Blof Mekanigi — Detay
 
@@ -201,6 +203,6 @@ Her elde blof istenirse su dosyalar guncellenir:
 
 | Step | Kapsam | Durum |
 |------|--------|-------|
-| Step 1 (MVP) | 1v1 oyun + blof mekanigi | Tamamlandi |
-| Step 2 (Polish) | Puanlama, runtime config, VFX, deployment | Aktif |
+| Step 1 (MVP) | 1v1 oyun + blof + puanlama + runtime config + deployment | Tamamlandi |
+| Step 2 (Polish) | Stabilizasyon, test, UI iyilestirme, production-hardening | Planli |
 | Step 3 (Scale) | 4 kisilik mod, PostgreSQL, ekonomi | Planli |

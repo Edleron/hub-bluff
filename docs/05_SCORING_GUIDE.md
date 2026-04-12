@@ -1,6 +1,6 @@
 # Bluff — Puanlama Rehberi
 
-**Versiyon:** 0.0.5
+**Versiyon:** 0.0.1
 **Tarih:** 2026-04-12
 
 ---

@@ -75,8 +75,6 @@ Blof kurali su dosyalarda tanimlidir:
 
 | Step | Kapsam | Durum |
 |------|--------|-------|
-| **Step 1 (MVP)** | 1v1 oyun + blof mekanigi | Tamamlandi |
-| **Step 2 (Polish)** | Puanlama, runtime config, VFX, deployment | Aktif |
+| **Step 1 (MVP)** | 1v1 oyun + blof mekanigi + puanlama + runtime config + deployment | Tamamlandi |
+| **Step 2 (Polish)** | Stabilizasyon, test, UI iyilestirme, production-hardening | Planli |
 | **Step 3 (Scale)** | 4 kisilik mod, PostgreSQL, ekonomi, matchmaking | Planli |
-
-Step 3'teki ozellikler eski v2 dokumanlarda detayli tanimli: `docs/v2/`

@@ -2,7 +2,7 @@
 
 **Tarih:** 2026-04-12 (guncelleme)
 **Versiyon:** 0.0.1
-**Durum:** Step 2 (Polish) aktif olarak gelistiriliyor
+**Durum:** Step 1 (MVP) tamamlandi — dogrulama ve stabilizasyon asamasinda
 
 ---
 
@@ -101,8 +101,9 @@ Token girisi kaldirildi. Yerine username butonlari eklendi.
   - CALL + sahte → blofcu 0, caller +10
 - `calcCardValues(cards)`: Kart deger puanlamasi (C2 +2, D10 +3)
 - `calcPistiBonus(played, top, config)`: Pisti bonusu (normal +10, jackpot +50)
-- `calcHandBonus(hand, config)`: Flush A+K+Q +30, Four of a Kind +50
-- `calcEndGameBonus(players)`: Kart fazlasi +5
+- `checkFlushBonus(hand)`: Flush A+K+Q +30
+- `checkFourOfAKindBonus(hand)`: Four of a Kind +50
+- `buildCardValueLabels(cards)`: UI icin kart deger etiketleri
 
 ### 2.2 Server Game Service (server/src/game/game.service.ts)
 
@@ -154,7 +155,7 @@ deckConfig, bluffCard?, bluffPlayerId?, bluffGroundCard?
 
 - DeckConfig: { deckCount, includeJokers, jokersPerDeck }
 - DEFAULT_DECK_CONFIG: { deckCount: 1, includeJokers: false, jokersPerDeck: 0 }
-- DOUBLE_DECK_CONFIG: { deckCount: 2, includeJokers: true, jokersPerDeck: 1 }
+- DOUBLE_DECK_CONFIG: { deckCount: 2, includeJokers: true, jokersPerDeck: 2 }
 - IRoomState: deckConfig alanini icerir (client'a gonderilir)
 
 ---
