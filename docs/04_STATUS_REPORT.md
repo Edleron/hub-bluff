@@ -1,7 +1,7 @@
 # Bluff — Durum Raporu ve Gelistirme Plani
 
 **Tarih:** 2026-04-12 (guncelleme)
-**Versiyon:** 0.0.5
+**Versiyon:** 0.0.1
 **Durum:** Step 2 (Polish) aktif olarak gelistiriliyor
 
 ---

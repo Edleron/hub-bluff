@@ -50,6 +50,17 @@ hub-bluff/
 - Animasyon: GSAP (sadece gsap.to — Timeline kullanma)
 - Kart Flip: PerspectiveMesh + GSAP ile 3D cevirme
 
+## Versiyon Yonetimi
+
+Versiyon **2 noktadan** yonetilir:
+
+| Dosya | Degisken | Aciklama |
+|-------|----------|----------|
+| `package.json` (root) | `version` | Client bunu okur (`vite.config.ts` → `APP_VERSION`) |
+| `server/src/shared/game.config.ts` | `GAME_VERSION` | Server bunu client'a gonderir (login response) |
+
+> Versiyon degistirmek = bu 2 dosyayi guncelle. Diger dosyalar (Dockerfile dummy, lock file) otomatik guncellenir.
+
 ## Port Haritasi
 
 - server: 3001 (HTTP + WebSocket)
