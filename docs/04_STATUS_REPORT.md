@@ -201,7 +201,8 @@ Fix: `_collectWinnerId` ile server'in gonderdigi `winner` alani kullanilarak dog
 | Durum | Puan | Aciklama |
 |-------|------|----------|
 | Normal pisti (blof olmadan) | +10 | Masa 1 kart, eslesme ile alma |
-| Pisti wildcard ile (J/Joker) | +20 | Wildcard ile pisti |
+| Jackpot pisti (wildcard ustune wildcard) | +50 | J/Joker ustune J/Joker |
+| Wildcard ile normal kart alma | +0 | Bonus yok, sadece eli alir |
 | Flush bonusu (A+K+Q elde) | +30 | Dagitimda elde A+K+Q varsa +30 |
 | Four of a Kind (4 ayni rank) | +50 | Dagitimda 4 kart ayni rank ise +50 |
 | Oyun sonu kart fazlasi | +5 | Daha fazla kart toplayan oyuncu |
@@ -228,7 +229,7 @@ Fix: `_collectWinnerId` ile server'in gonderdigi `winner` alani kullanilarak dog
 - **Oyun sonunda:** Kart fazlasi +5
 
 **Ilgili dosyalar:**
-- `server/src/engine/scoring.ts` → `calcCardValues()`, `calcPistiBonus()`, `calcHandBonus()`, `calcEndGameBonus()`
+- `server/src/engine/scoring.ts` → `calcCardValues()`, `calcPistiBonus()`, `calcBluffScore()`, `checkFlushBonus()`, `checkFourOfAKindBonus()`
 - `server/src/game/game.service.ts` → playCard icinde pile capture'da + checkRefillOrEnd icinde oyun sonu
 
 ---

@@ -50,8 +50,8 @@ Blof **sadece masada tam 1 kart varken** (pisti zemini) yapilabilir.
 Rakip 30 saniye icinde karar verir (timeout = otomatik Gec):
 
 **"Ac!" (Call) — Karti actir:**
-- Gercek Pisti ise (kart eslesiyor veya wildcard) → blofcu **+20 puan**
-- Sahte Pisti ise (kart eslesmiyorsa) → rakip **+10 puan**
+- Gercek Pisti ise (rank eslesiyor) → blofcu **+20 puan**
+- Sahte Pisti ise (kart eslesmiyorsa veya wildcard ile) → rakip **+10 puan** / blofcu **0 puan**
 
 **"Gec" (Pass) — Kabul et:**
 - Kart acilmaz → blofcu **+10 puan**
@@ -60,8 +60,9 @@ Rakip 30 saniye icinde karar verir (timeout = otomatik Gec):
 
 | Durum | Sonuc |
 |-------|-------|
-| Blof yapmadiniz, rakip acti | +20 puan (sana) |
-| Blof yaptiniz, rakip acti | +10 puan (rakibe) |
+| Gercek kart attin, rakip acti (rank eslesmesi) | +20 puan (sana) |
+| Sahte kart attin, rakip acti (yakaladin) | +10 puan (rakibe) |
+| Wildcard ile attin, rakip acti | 0 puan (eli alirsin, bonus yok) |
 | Rakip acmadi (Gec dedi) | +10 puan (sana) |
 
 ### Kod Referansi
