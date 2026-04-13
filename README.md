@@ -151,10 +151,10 @@ Bluff can only be played when the pile has **exactly 1 card** (Pisti opportunity
 3. You are claiming Pisti — but the card could be anything
 4. Opponent has 30 seconds to decide:
 
-| Opponent's Choice | If Real Pisti | If Fake Pisti |
-|-------------------|---------------|---------------|
-| **Ac!** (Call — reveal) | You get **+20 pts** | Opponent gets **+10 pts** |
-| **Gec** (Pass — accept) | You get **+10 pts** | You get **+10 pts** |
+| Opponent's Choice | If Real Pisti (rank match) | If Wildcard (J/Joker) | If Fake Pisti |
+|-------------------|---------------------------|----------------------|---------------|
+| **Ac!** (Call — reveal) | You get **+20 pts** | You get **0 pts** (pile only) | Opponent gets **+10 pts** |
+| **Gec** (Pass — accept) | You get **+10 pts** | You get **+10 pts** | You get **+10 pts** |
 
 If opponent doesn't decide in 30s → auto **Gec** (Pass).
 
