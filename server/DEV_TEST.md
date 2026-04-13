@@ -10,57 +10,41 @@ cd server && pnpm run start:dev
 
 ## HTTP Test Akisi
 
-### 1. Player 1 kayit
+### 1. Login (edleron — host)
 ```bash
-curl -X POST http://localhost:3001/auth/nickname \
+curl -X POST http://localhost:3001/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"nickname":"Player1"}'
-# → {"token":"TOKEN_1","playerId":"ID_1","nickname":"Player1"}
+  -d '{"token":"edleron"}'
+# → {"token":"edleron","playerId":"player-1","nickname":"edleron","roomId":"default-room","serverVersion":"0.0.1","isHost":true}
 ```
 
-### 2. Player 2 kayit
+### 2. Login (wilkagul — guest)
 ```bash
-curl -X POST http://localhost:3001/auth/nickname \
+curl -X POST http://localhost:3001/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"nickname":"Player2"}'
-# → {"token":"TOKEN_2","playerId":"ID_2","nickname":"Player2"}
-```
-
-### 3. Oda olustur (Player 1)
-```bash
-curl -X POST http://localhost:3001/rooms \
-  -H "Authorization: Bearer TOKEN_1"
-# → {"roomId":"ROOM_ID","code":"ABCD"}
-```
-
-### 4. Odaya katil (Player 2)
-```bash
-curl -X POST http://localhost:3001/rooms/ROOM_ID/join \
-  -H "Authorization: Bearer TOKEN_2"
-# → {"roomId":"ROOM_ID","code":"ABCD","playerCount":2}
-```
-
-### 5. Odalari listele
-```bash
-curl http://localhost:3001/rooms
+  -d '{"token":"wilkagul"}'
+# → {"token":"wilkagul","playerId":"player-2","nickname":"wilkagul","roomId":"default-room","serverVersion":"0.0.1","isHost":false}
 ```
 
 ## WebSocket Test (wscat ile)
 
 ```bash
-# Terminal 1 — Player 1
-npx wscat -c "ws://localhost:3001/game" -H "auth:{\"token\":\"TOKEN_1\"}"
-> {"event":"joinRoom","data":{"roomId":"ROOM_ID"}}
+# Terminal 1 — edleron (host)
+npx wscat -c "ws://localhost:3001/game" -H "auth:{\"token\":\"edleron\"}"
+> {"event":"joinRoom","data":{"roomId":"default-room","config":{"deckType":"single","bluffEnabled":true}}}
 
-# Terminal 2 — Player 2
-npx wscat -c "ws://localhost:3001/game" -H "auth:{\"token\":\"TOKEN_2\"}"
-> {"event":"joinRoom","data":{"roomId":"ROOM_ID"}}
+# Terminal 2 — wilkagul (guest)
+npx wscat -c "ws://localhost:3001/game" -H "auth:{\"token\":\"wilkagul\"}"
+> {"event":"joinRoom","data":{"roomId":"default-room"}}
 
 # Iki oyuncu da joinRoom yapinca oyun baslar
 # roomState ve yourHand eventleri gelir
 
-# Kart oyna (kendi elindeki kartın ID'sini kullan)
-> {"event":"playCard","data":{"cardId":"S7_0","isHidden":false}}
+# Kart oyna (kendi elindeki kartin ID'sini kullan)
+> {"event":"playCard","data":{"cardId":"S7","isHidden":false}}
+
+# Kapali oyna (blof — sadece pile === 1 ise)
+> {"event":"playCard","data":{"cardId":"H7","isHidden":true}}
 
 # Blof karari (rakip blof attiginda)
 > {"event":"bluffDecision","data":{"decision":"CALL"}}
@@ -69,24 +53,27 @@ npx wscat -c "ws://localhost:3001/game" -H "auth:{\"token\":\"TOKEN_2\"}"
 ## Socket.io Client ile Test (browser console)
 
 ```javascript
-const io = require('socket.io-client');
-// veya browser: <script src="https://cdn.socket.io/4.7.5/socket.io.min.js">
-
 const socket = io('ws://localhost:3001/game', {
-  auth: { token: 'TOKEN_1' }
+  auth: { token: 'edleron' }
 });
 
 socket.on('roomState', (state) => console.log('State:', state));
 socket.on('yourHand', (hand) => console.log('Hand:', hand));
 socket.on('bluffRequest', (data) => console.log('Bluff!', data));
+socket.on('bluffResolved', (data) => console.log('Resolved:', data));
+socket.on('cardPlayed', (data) => console.log('Card:', data));
+socket.on('scoreUpdate', (data) => console.log('Score:', data));
 socket.on('gameOver', (result) => console.log('Game Over:', result));
 socket.on('error', (err) => console.log('Error:', err));
 
-// Odaya katil
-socket.emit('joinRoom', { roomId: 'ROOM_ID' });
+// Odaya katil (host config ile)
+socket.emit('joinRoom', {
+  roomId: 'default-room',
+  config: { deckType: 'single', bluffEnabled: true }
+});
 
 // Kart oyna
-socket.emit('playCard', { cardId: 'S7_0', isHidden: false });
+socket.emit('playCard', { cardId: 'S7', isHidden: false });
 
 // Blof karari
 socket.emit('bluffDecision', { decision: 'CALL' });
@@ -94,7 +81,11 @@ socket.emit('bluffDecision', { decision: 'CALL' });
 
 ## Notlar
 
-- Token'lar sunucu restart'inda sifirlanir (RAM-only)
-- Oda dolu (2 kisi) + iki oyuncu joinRoom yapar → oyun otomatik baslar
-- Bluff timeout: 30 saniye sonra oyuncu disconnect sayilir
-- ACTIVE_DECK_CONFIG degistirmek: `src/shared/game.config.ts` icinde tek satir
+- Tokenlar sabit: `edleron` (host) ve `wilkagul` (guest)
+- Tek sabit oda: `default-room` (oda kurma/secme yok)
+- Host JOIN_ROOM'da config gonderir (deckType + bluffEnabled)
+- Guest config gondermez, host'un ayarlari gecerlidir
+- Iki oyuncu joinRoom yapinca oyun otomatik baslar
+- Bluff timeout: 30 saniye sonra otomatik PASS
+- Disconnect: 30 saniye grace period, sonra oyun silinir
+- Tum state RAM'de — sunucu restart'inda sifirlanir
