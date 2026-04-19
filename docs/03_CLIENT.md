@@ -85,7 +85,10 @@ client/
 │   │   ├── screens/
 │   │   │   ├── LoadScreen.ts
 │   │   │   ├── LobbyScreen.ts
-│   │   │   ├── GameScreen.ts
+│   │   │   ├── GameScreen.ts        → Orchestrator (state, socket, render)
+│   │   │   ├── GameAnimations.ts    → Deal, play, collect, opponent animasyonlari
+│   │   │   ├── BluffController.ts   → Bluff panel + timer + resolve
+│   │   │   ├── ScoreDisplay.ts      → Skor panel + toast + shake
 │   │   │   └── GameOverScreen.ts
 │   │   ├── ui/
 │   │   │   ├── Button.ts
