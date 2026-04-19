@@ -10,18 +10,18 @@
 * [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Dosya oluştur, metotları taşı (animateDealHand, animateOpponentDeal, animatePlayCard, animateOpponentPlay, animateCollectPile)
 * [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: GameScreen'de this.animations = new GameAnimations(...) oluştur
 * [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Tüm çağrıları [this.animations.xxx](http://this.animations.xxx/)() olarak güncelle
-* [ ] 00X → | Bluff → REFACTOR → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
+* [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
 * [x] 00X → | Bluff → REFACTOR → BluffController.ts: Dosya oluştur, metotları taşı (showBluffPanel, startBluffTimer, stopBluffTimer, handleBluff, onBluffResolved)
 * [x] 00X → | Bluff → REFACTOR → BluffController.ts: Bluff paneli UI oluşturmayı BluffController constructor'ına taşı
 * [x] 00X → | Bluff → REFACTOR → BluffController.ts: GameScreen'de this.bluff = new BluffController(...) oluştur
-* [ ] 00X → | Bluff → REFACTOR → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
+* [x] 00X → | Bluff → REFACTOR → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
 * [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Dosya oluştur, metotları taşı (onScoreUpdate, showScoreToast, shakeScreen, toggleScorePanel)
 * [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Skor UI oluşturmayı ScoreDisplay constructor'ına taşı
 * [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: GameScreen'de this.score = new ScoreDisplay(...) oluştur
-* [ ] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
+* [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
 * [x] 00X → | Bluff → REFACTOR → Final doğrulama: GameScreen.ts ~500 satır olmalı (orchestrator)
 * [x] 00X → | Bluff → REFACTOR → Final doğrulama: Tüm dosyalar TypeScript strict mode hatası yok
-* [ ] 00X → | Bluff → REFACTOR → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
+* [x] 00X → | Bluff → REFACTOR → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
 * [ ] 00X → | Bluff → BUG → B1: Server resolveBluff() → PASS case'inde pile blofçuya atanmalı
 * [ ] 00X → | Bluff → BUG → B1: Client _collectWinnerId → collect animasyonu blofçu yönüne gitmeli
 * [ ] 00X → | Bluff → BUG → B1: Playing test (PASS → pile blofçuya gidiyor + animasyon doğru yön)

@@ -118,7 +118,7 @@ Sira: Ilk cikar cunku en buyuk parca (354 satir) ve diger adimlara bagimli degil
 - [x] Dosya olustur, metotlari tasi
 - [x] GameScreen'de `this.animations = new GameAnimations(...)` olustur
 - [x] Tum cagrilari `this.animations.xxx()` olarak guncelle
-- [ ] Playing test: kart oyna, dagitim, toplama → ayni animasyonlar
+- [x] Playing test: kart oyna, dagitim, toplama → ayni animasyonlar
 
 #### Adim 2 — `BluffController.ts`
 
@@ -143,7 +143,7 @@ Sira: Animasyonlardan sonra, cunku `onBluffResolved` icerisinde animasyon tetikl
 - [x] Dosya olustur, metotlari tasi
 - [x] Bluff paneli UI olusturmayi BluffController constructor'ina tasi
 - [x] GameScreen'de `this.bluff = new BluffController(...)` olustur
-- [ ] Playing test: blof yap, CALL, PASS, timeout → ayni davranis
+- [x] Playing test: blof yap, CALL, PASS, timeout → ayni davranis
 
 #### Adim 3 — `ScoreDisplay.ts`
 
@@ -168,13 +168,13 @@ Sira: En son, cunku en az bagimlilik var ve diger adimlari etkilemiyor.
 - [x] Dosya olustur, metotlari tasi
 - [x] Skor UI olusturmayi ScoreDisplay constructor'ina tasi
 - [x] GameScreen'de `this.score = new ScoreDisplay(...)` olustur
-- [ ] Playing test: puan degisimi, toast, shake, score panel → ayni davranis
+- [x] Playing test: puan degisimi, toast, shake, score panel → ayni davranis
 
 #### Adim 4 — Final dogrulama
 
 - [x] GameScreen.ts ~500 satir olmali (orchestrator) — **gerceklesen: 739 satir** (hedeften +239, kabul edilebilir)
 - [x] Tum dosyalar TypeScript strict mode hatasi yok
-- [ ] Playing test (tam akis):
+- [x] Playing test (tam akis):
   1. Login → lobby → oyun basla (deal animasyonu)
   2. Kart sec → oyna (play animasyonu)
   3. Eslesme → pile toplama (collect animasyonu)
