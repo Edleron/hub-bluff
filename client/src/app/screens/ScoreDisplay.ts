@@ -98,7 +98,8 @@ export class ScoreDisplay {
     if (me) {
       this.playerNameLabel.text = me.nickname;
       this.playerScoreLabel.text = `${me.score}`;
-      if (me.score > this.prevMyScore) {
+      // Reveal sirasinda shake'i bastir (I-GF0 kendi shake'ini yapar)
+      if (me.score > this.prevMyScore && !this.screen._bluffRevealing) {
         this.shake();
       }
       this.prevMyScore = me.score;

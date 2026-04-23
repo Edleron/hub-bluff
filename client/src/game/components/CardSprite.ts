@@ -79,8 +79,8 @@ export class CardSprite extends Container {
     this.resetCorners();
   }
 
-  /** PerspectiveMesh flip animasyonu — 3D cevirme efekti */
-  async flip(toFaceUp?: boolean): Promise<void> {
+  /** PerspectiveMesh flip animasyonu — 3D cevirme efekti. durationSec = toplam sure (iki faz birlikte) */
+  async flip(toFaceUp?: boolean, durationSec?: number): Promise<void> {
     if (this.destroyed) return;
     const target = toFaceUp ?? !this._faceUp;
     if (target === this._faceUp) return;
@@ -89,7 +89,8 @@ export class CardSprite extends Container {
     this.killFlipTweens();
     const gen = ++this._flipGen;
 
-    const dur = 0.25;
+    const totalDur = durationSec ?? 0.5;
+    const dur = totalDur / 2;
     const squeeze = 0.15;
     const hw = CARD_W / 2;
 
