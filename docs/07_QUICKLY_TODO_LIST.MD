@@ -7,27 +7,27 @@
 > (öncelik, hedef dosya, spec, kural). Done yapınca **iki dosyayı da işaretle**:
 > hem buradaki `[ ]` → `[x]`, hem ROADMAP'teki aynı satır.
 
-* [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Dosya oluştur, metotları taşı (animateDealHand, animateOpponentDeal, animatePlayCard, animateOpponentPlay, animateCollectPile)
-* [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: GameScreen'de this.animations = new GameAnimations(...) oluştur
-* [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Tüm çağrıları [this.animations.xxx](http://this.animations.xxx/)() olarak güncelle
-* [x] 00X → | Bluff → REFACTOR → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
-* [x] 00X → | Bluff → REFACTOR → BluffController.ts: Dosya oluştur, metotları taşı (showBluffPanel, startBluffTimer, stopBluffTimer, handleBluff, onBluffResolved)
-* [x] 00X → | Bluff → REFACTOR → BluffController.ts: Bluff paneli UI oluşturmayı BluffController constructor'ına taşı
-* [x] 00X → | Bluff → REFACTOR → BluffController.ts: GameScreen'de this.bluff = new BluffController(...) oluştur
-* [x] 00X → | Bluff → REFACTOR → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
-* [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Dosya oluştur, metotları taşı (onScoreUpdate, showScoreToast, shakeScreen, toggleScorePanel)
-* [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Skor UI oluşturmayı ScoreDisplay constructor'ına taşı
-* [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: GameScreen'de this.score = new ScoreDisplay(...) oluştur
-* [x] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
-* [x] 00X → | Bluff → REFACTOR → Final doğrulama: GameScreen.ts ~500 satır olmalı (orchestrator)
-* [x] 00X → | Bluff → REFACTOR → Final doğrulama: Tüm dosyalar TypeScript strict mode hatası yok
-* [x] 00X → | Bluff → REFACTOR → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
-* [ ] 00X → | Bluff → BUG → B1: Server resolveBluff() → PASS case'inde pile blofçuya atanmalı
-* [ ] 00X → | Bluff → BUG → B1: Client _collectWinnerId → collect animasyonu blofçu yönüne gitmeli
-* [ ] 00X → | Bluff → BUG → B1: Playing test (PASS → pile blofçuya gidiyor + animasyon doğru yön)
-* [ ] 00X → | Bluff → UI → I-U1: Yeni kart asset'leri seç/tasarla
-* [ ] 00X → | Bluff → UI → I-U1: raw-assets/ → AssetPack ile spritesheet oluştur
-* [ ] 00X → | Bluff → UI → I-U1: cardMapping.ts → yeni frame isimlerine güncelle
+* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Dosya oluştur, metotları taşı (animateDealHand, animateOpponentDeal, animatePlayCard, animateOpponentPlay, animateCollectPile)
+* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: GameScreen'de this.animations = new GameAnimations(...) oluştur
+* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Tüm çağrıları [this.animations.xxx](http://this.animations.xxx/)() olarak güncelle
+* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
+* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Dosya oluştur, metotları taşı (showBluffPanel, startBluffTimer, stopBluffTimer, handleBluff, onBluffResolved)
+* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Bluff paneli UI oluşturmayı BluffController constructor'ına taşı
+* [X] 00X → | Bluff → REFACTOR → BluffController.ts: GameScreen'de this.bluff = new BluffController(...) oluştur
+* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
+* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Dosya oluştur, metotları taşı (onScoreUpdate, showScoreToast, shakeScreen, toggleScorePanel)
+* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Skor UI oluşturmayı ScoreDisplay constructor'ına taşı
+* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: GameScreen'de this.score = new ScoreDisplay(...) oluştur
+* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
+* [X] 00X → | Bluff → REFACTOR → Final doğrulama: GameScreen.ts ~500 satır olmalı (orchestrator)
+* [X] 00X → | Bluff → REFACTOR → Final doğrulama: Tüm dosyalar TypeScript strict mode hatası yok
+* [X] 00X → | Bluff → REFACTOR → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
+* [X] 00X → | Bluff → BUG → B1: Server resolveBluff() → PASS case'inde pile blofçuya atanmalı
+* [X] 00X → | Bluff → BUG → B1: Client _collectWinnerId → collect animasyonu blofçu yönüne gitmeli
+* [X] 00X → | Bluff → BUG → B1: Playing test (PASS → pile blofçuya gidiyor + animasyon doğru yön)
+* [x] 00X → | Bluff → UI → I-U1: Yeni kart asset'leri seç/tasarla
+* [x] 00X → | Bluff → UI → I-U1: raw-assets/ → AssetPack ile spritesheet oluştur
+* [x] 00X → | Bluff → UI → I-U1: cardMapping.ts → yeni frame isimlerine güncelle
 * [ ] 00X → | Bluff → UI → I-U2: Yeni background asset'i (masa dokusu, vignette, ışık efekti)
 * [ ] 00X → | Bluff → UI → I-U2: GameScreen'e background sprite ekle
 * [ ] 00X → | Bluff → UI → I-U3: Her oyuncunun pişti sayısını takip et (server state'e ekle)

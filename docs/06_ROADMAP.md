@@ -13,6 +13,7 @@
 > **Hizli checklist:** `docs/07_QUICKLY_TODO_LIST.md` (mikro task listesi).
 >
 > ### Her task icin akis:
+>
 > 1. **ONCELIK SIRASI** tablosuna bak — hangi maddeyi yapacagini bul
 > 2. Bu dokumandan ilgili maddenin **detayini oku** (hedef dosya, spec, kurallar)
 > 3. Implement et
@@ -115,10 +116,10 @@ Bagimliliklar:
 
 Sira: Ilk cikar cunku en buyuk parca (354 satir) ve diger adimlara bagimli degil.
 
-- [x] Dosya olustur, metotlari tasi
-- [x] GameScreen'de `this.animations = new GameAnimations(...)` olustur
-- [x] Tum cagrilari `this.animations.xxx()` olarak guncelle
-- [x] Playing test: kart oyna, dagitim, toplama → ayni animasyonlar
+- [X] Dosya olustur, metotlari tasi
+- [X] GameScreen'de `this.animations = new GameAnimations(...)` olustur
+- [X] Tum cagrilari `this.animations.xxx()` olarak guncelle
+- [X] Playing test: kart oyna, dagitim, toplama → ayni animasyonlar
 
 #### Adim 2 — `BluffController.ts`
 
@@ -140,10 +141,10 @@ Bagimliliklar:
 
 Sira: Animasyonlardan sonra, cunku `onBluffResolved` icerisinde animasyon tetikliyor.
 
-- [x] Dosya olustur, metotlari tasi
-- [x] Bluff paneli UI olusturmayi BluffController constructor'ina tasi
-- [x] GameScreen'de `this.bluff = new BluffController(...)` olustur
-- [x] Playing test: blof yap, CALL, PASS, timeout → ayni davranis
+- [X] Dosya olustur, metotlari tasi
+- [X] Bluff paneli UI olusturmayi BluffController constructor'ina tasi
+- [X] GameScreen'de `this.bluff = new BluffController(...)` olustur
+- [X] Playing test: blof yap, CALL, PASS, timeout → ayni davranis
 
 #### Adim 3 — `ScoreDisplay.ts`
 
@@ -165,16 +166,16 @@ Bagimliliklar:
 
 Sira: En son, cunku en az bagimlilik var ve diger adimlari etkilemiyor.
 
-- [x] Dosya olustur, metotlari tasi
-- [x] Skor UI olusturmayi ScoreDisplay constructor'ina tasi
-- [x] GameScreen'de `this.score = new ScoreDisplay(...)` olustur
-- [x] Playing test: puan degisimi, toast, shake, score panel → ayni davranis
+- [X] Dosya olustur, metotlari tasi
+- [X] Skor UI olusturmayi ScoreDisplay constructor'ina tasi
+- [X] GameScreen'de `this.score = new ScoreDisplay(...)` olustur
+- [X] Playing test: puan degisimi, toast, shake, score panel → ayni davranis
 
 #### Adim 4 — Final dogrulama
 
-- [x] GameScreen.ts ~500 satir olmali (orchestrator) — **gerceklesen: 739 satir** (hedeften +239, kabul edilebilir)
-- [x] Tum dosyalar TypeScript strict mode hatasi yok
-- [x] Playing test (tam akis):
+- [X] GameScreen.ts ~500 satir olmali (orchestrator) — **gerceklesen: 739 satir** (hedeften +239, kabul edilebilir)
+- [X] Tum dosyalar TypeScript strict mode hatasi yok
+- [X] Playing test (tam akis):
   1. Login → lobby → oyun basla (deal animasyonu)
   2. Kart sec → oyna (play animasyonu)
   3. Eslesme → pile toplama (collect animasyonu)
@@ -193,9 +194,9 @@ Sira: En son, cunku en az bagimlilik var ve diger adimlari etkilemiyor.
 Puan ve siralama dogru calisiyor ama PASS sonrasi pile (kartlar) yanlis oyuncuya veriliyor
 ve collect animasyonu yanlis yone gidiyor. Ayni sorunun server (sahiplik) ve client (animasyon) tarafi.
 
-- [ ] Server: `resolveBluff()` → PASS case'inde pile blofcuya atanmali
-- [ ] Client: `_collectWinnerId` → collect animasyonu blofcu yonune gitmeli
-- [ ] Playing test: PASS → pile blofcuya gidiyor + animasyon dogru yon
+- [X] Server: `resolveBluff()` → PASS case'inde pile blofcuya atanmali
+- [X] Client: `_collectWinnerId` → collect animasyonu blofcu yonune gitmeli
+- [X] Playing test: PASS → pile blofcuya gidiyor + animasyon dogru yon
 
 ---
 
@@ -207,9 +208,9 @@ ve collect animasyonu yanlis yone gidiyor. Ayni sorunun server (sahiplik) ve cli
 
 Mevcut kart sprite'lari degistirilecek. Yeni kart seti entegre edilecek.
 
-- [ ] Yeni kart asset'leri sec/tasarla
-- [ ] `raw-assets/` → AssetPack ile spritesheet olustur
-- [ ] `cardMapping.ts` → yeni frame isimlerine guncelle
+- [x] Yeni kart asset'leri sec/tasarla
+- [x] `raw-assets/` → AssetPack ile spritesheet olustur
+- [x] `cardMapping.ts` → yeni frame isimlerine guncelle
 
 #### I-U2 — Background yenileme
 

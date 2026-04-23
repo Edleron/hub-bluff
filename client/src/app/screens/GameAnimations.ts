@@ -7,11 +7,11 @@ import type { ICard } from "../../shared/types";
 
 import type { GameScreen } from "./GameScreen";
 
-export const CARD_SCALE = 0.6;
-export const OPPONENT_CARD_SCALE = 0.5;
-export const TABLE_CARD_SCALE = 0.7;
-export const HAND_SPACING = 100;
-export const OPPONENT_SPACING = 80;
+export const CARD_SCALE = 0.85;
+export const OPPONENT_CARD_SCALE = 0.7;
+export const TABLE_CARD_SCALE = 0.95;
+export const HAND_SPACING = 140;
+export const OPPONENT_SPACING = 112;
 export const DEAL_DURATION = 0.3;
 export const DEAL_STAGGER = 0.1;
 export const PLAY_DURATION = 0.25;

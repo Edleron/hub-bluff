@@ -48,7 +48,7 @@ export function cardToFrame(card: ICard): string {
 }
 
 /** Card back sprite frame name */
-export const CARD_BACK_FRAME = "card_back_blue.png";
+export const CARD_BACK_FRAME = "card-back.png";
 
 /**
  * Card ID → ICard
