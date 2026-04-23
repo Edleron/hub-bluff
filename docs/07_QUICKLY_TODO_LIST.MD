@@ -6,28 +6,114 @@
 > **Bu hızlı checklist'tir.** Her task öncesi `docs/06_ROADMAP.md`'den detayını oku
 > (öncelik, hedef dosya, spec, kural). Done yapınca **iki dosyayı da işaretle**:
 > hem buradaki `[ ]` → `[x]`, hem ROADMAP'teki aynı satır.
+>
+> **NEREDE KALDIK?** → **F2A-1 BluffResolvedData extension** (ilk [ ] satırı)
+> Sıra: F2A → F2B → F2C → F2D → F2E → B2-B6 → I-U → I-GF → I-S → I-ST → F1-F4
 
-* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Dosya oluştur, metotları taşı (animateDealHand, animateOpponentDeal, animatePlayCard, animateOpponentPlay, animateCollectPile)
-* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: GameScreen'de this.animations = new GameAnimations(...) oluştur
-* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Tüm çağrıları [this.animations.xxx](http://this.animations.xxx/)() olarak güncelle
-* [X] 00X → | Bluff → REFACTOR → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
-* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Dosya oluştur, metotları taşı (showBluffPanel, startBluffTimer, stopBluffTimer, handleBluff, onBluffResolved)
-* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Bluff paneli UI oluşturmayı BluffController constructor'ına taşı
-* [X] 00X → | Bluff → REFACTOR → BluffController.ts: GameScreen'de this.bluff = new BluffController(...) oluştur
-* [X] 00X → | Bluff → REFACTOR → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
-* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Dosya oluştur, metotları taşı (onScoreUpdate, showScoreToast, shakeScreen, toggleScorePanel)
-* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Skor UI oluşturmayı ScoreDisplay constructor'ına taşı
-* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: GameScreen'de this.score = new ScoreDisplay(...) oluştur
-* [X] 00X → | Bluff → REFACTOR → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
-* [X] 00X → | Bluff → REFACTOR → Final doğrulama: GameScreen.ts ~500 satır olmalı (orchestrator)
-* [X] 00X → | Bluff → REFACTOR → Final doğrulama: Tüm dosyalar TypeScript strict mode hatası yok
-* [X] 00X → | Bluff → REFACTOR → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → GameAnimations.ts: Dosya oluştur, metotları taşı (animateDealHand, animateOpponentDeal, animatePlayCard, animateOpponentPlay, animateCollectPile)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → GameAnimations.ts: GameScreen'de this.animations = new GameAnimations(...) oluştur
+* [X] 00X → | Bluff → REFACTOR Faz 1 → GameAnimations.ts: Tüm çağrıları [this.animations.xxx](http://this.animations.xxx/)() olarak güncelle
+* [X] 00X → | Bluff → REFACTOR Faz 1 → GameAnimations.ts: Playing test (kart oyna, dağıtım, toplama → aynı animasyonlar)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → BluffController.ts: Dosya oluştur, metotları taşı (showBluffPanel, startBluffTimer, stopBluffTimer, handleBluff, onBluffResolved)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → BluffController.ts: Bluff paneli UI oluşturmayı BluffController constructor'ına taşı
+* [X] 00X → | Bluff → REFACTOR Faz 1 → BluffController.ts: GameScreen'de this.bluff = new BluffController(...) oluştur
+* [X] 00X → | Bluff → REFACTOR Faz 1 → BluffController.ts: Playing test (blof yap, CALL, PASS, timeout → aynı davranış)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → ScoreDisplay.ts: Dosya oluştur, metotları taşı (onScoreUpdate, showScoreToast, shakeScreen, toggleScorePanel)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → ScoreDisplay.ts: Skor UI oluşturmayı ScoreDisplay constructor'ına taşı
+* [X] 00X → | Bluff → REFACTOR Faz 1 → ScoreDisplay.ts: GameScreen'de this.score = new ScoreDisplay(...) oluştur
+* [X] 00X → | Bluff → REFACTOR Faz 1 → ScoreDisplay.ts: Playing test (puan değişimi, toast, shake, score panel → aynı davranış)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → Final doğrulama: GameScreen.ts ~500 satır olmalı (orchestrator)
+* [X] 00X → | Bluff → REFACTOR Faz 1 → Final doğrulama: Tüm dosyalar TypeScript strict mode hatası yok
+* [X] 00X → | Bluff → REFACTOR Faz 1 → Final doğrulama: Playing test tam akış (login → lobby → deal → kart seç → oyna → eşleşme → collect → pişti → blof CALL reveal → blof PASS → son el game over → reconnect state restore)
 * [X] 00X → | Bluff → BUG → B1: Server resolveBluff() → PASS case'inde pile blofçuya atanmalı
 * [X] 00X → | Bluff → BUG → B1: Client _collectWinnerId → collect animasyonu blofçu yönüne gitmeli
 * [X] 00X → | Bluff → BUG → B1: Playing test (PASS → pile blofçuya gidiyor + animasyon doğru yön)
-* [x] 00X → | Bluff → UI → I-U1: Yeni kart asset'leri seç/tasarla
-* [x] 00X → | Bluff → UI → I-U1: raw-assets/ → AssetPack ile spritesheet oluştur
-* [x] 00X → | Bluff → UI → I-U1: cardMapping.ts → yeni frame isimlerine güncelle
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-1: BluffResolvedData'ya blufferDelta + callerDelta ekle (shared types)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-1: Server resolveBluff event'lerde delta forward et
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-1: Gateway bluffResolved emit'te delta gönder
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-1: Playing test (event'te delta geliyor, henüz UI kullanma)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-2: LayerManager.ts oluştur (game/ altında, ~50 satır)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-2: API — addPersistent / addOverlay / ensureTopMost
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-2: GameScreen ctor'da instance + tüm screen.addChild migrate
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-2: Playing test (toast + collect anında kart önde)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-3: DeferredActions.ts oluştur (game/ altında, ~100 satır)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-3: Typed action union (collect/tableCard/dealHand/dealOpponent/gameOver)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-3: GameScreen'deki 6+ _deferredXxx field'ları kaldır
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-3: Playing test (blof CALL + rapid play race yok)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-4: Server events/GameEventTypes.ts typed union (~60)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-4: Server events/GameEventEmitter.ts class (~80)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-4: Gateway'de inject, tüm server.to().emit() migrate
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-4: Playing test (tüm event'ler doğru client'a)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-5: shared/game-constants.ts oluştur (TIMING, HAND_SIZE, INITIAL_TABLE_CARDS)
+* [ ] 00X → | Bluff → REFACTOR Faz 2A → F2A-5: Tüm magic number'ları import et (server + client)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-1: TableArea.ts oluştur (ui/, ~100) — renderTableCard logic taşı
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-1: API — setTopCard/clear/getBackCards + bluff back
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-1: Playing test (pile render + bluff back doğru)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-2: HandArea.ts oluştur (ui/, ~100) — player + opponent hand
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-2: API — setCards/select/clear/count, iki mode (player/opponent)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-2: Playing test (hand render + seçim)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-3: TurnIndicator.ts oluştur (ui/, ~40) — turn label wrapper
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-3: API — setPhase(phase, isMyTurn)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-4: BluffPanel.ts oluştur (ui/, ~100) — panel + timer UI (reveal HARİÇ)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-4: API — show/hide/onDecision/reset
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-4: Playing test (panel + timer çalışıyor)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-5: ScorePanel.ts oluştur (ui/, ~80) — sol üst label'lar
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-5: CupButton.ts oluştur (ui/, ~40) — sağ alt kupa + detail toggle
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-5: Playing test (skor + kupa butonu çalışıyor)
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-6: DeckCounter.ts oluştur (ui/, ~60) — deste ikonu + sayı
+* [ ] 00X → | Bluff → REFACTOR Faz 2B → F2B-6: API — setCount/flash
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-1: DealEffect.ts oluştur (effects/, ~120) — animateDealHand + animateOpponentDeal
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-1: Playing test (dağıtım animasyonu aynı)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-2: PlayEffect.ts oluştur (effects/, ~100) — animatePlayCard + animateOpponentPlay
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-2: Playing test (kart oynama animasyonu aynı)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-3: CollectEffect.ts oluştur (effects/, ~120) — animateCollectPile
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-3: Playing test (pile toplama aynı)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-4: RevealEffect.ts oluştur (effects/, ~200) — I-GF0 9 adım
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-4: API — reveal(bluffBack, data) + cleanup
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-4: Playing test (blof CALL reveal aynı)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-5: ScoreToast.ts oluştur (effects/, ~100) — toast + queue/offset
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-5: activeToasts[] yönetim (B6 temel)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-5: Playing test (ardarda scoreUpdate okunur)
+* [ ] 00X → | Bluff → REFACTOR Faz 2C → F2C-6: FlashEffect.ts + ShakeEffect.ts helper (effects/, ~40+40)
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-1: GameLifecycle.ts oluştur (game/, ~100) — prepare/show/hide/reset
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-2: GameLayout.ts oluştur (game/, ~80) — resize + positioning
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-3: GameSocketHandler.ts oluştur (game/, ~80) — socket subscribe + dispatch
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-4: GameStateController.ts oluştur (game/, ~150) — onRoomState/onYourHand/onCardPlayed
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-5: CardSelector.ts oluştur (game/, ~80) — selectCard/playSelectedCard
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-6: GameScreen.ts ~100 satıra indir (orchestrator)
+* [ ] 00X → | Bluff → REFACTOR Faz 2D → F2D-6: Playing test tam akış (tüm senaryolar aynı)
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-1: Server state/GameStateManager.ts + GameInitializer.ts + StateMasking.ts
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-1: GameService bunları inject edip kullansın
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-1: Playing test (oyun başlangıç + state maskeleme)
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-2: Server flow/PlayCardHandler.ts + ResolveBluffHandler.ts + RefillOrEndHandler.ts
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-2: ResolveBluffHandler private Pass/CallReal/CallFake
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-2: Playing test (kart oynama + blof + el sonu)
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-3: Server timers/BluffTimer.ts (~40) — 30s auto-PASS
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-4: game.gateway.ts ~150 satıra trim (sadece routing)
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-4: game.service.ts ~100 satıra trim (orchestrator)
+* [ ] 00X → | Bluff → REFACTOR Faz 2E → F2E-4: Playing test tam akış
+* [ ] 00X → | Bluff → BUG → B2: ~~Server BluffResolvedData tipine blufferDelta + callerDelta ekle~~ ⬅️ **F2A-1 ile DONE**
+* [ ] 00X → | Bluff → BUG → B2: ~~Server game.gateway.ts bluffResolved emit'inde delta'ları gönder~~ ⬅️ **F2A-1 ile DONE**
+* [ ] 00X → | Bluff → BUG → B2: Client BluffController.onResolved → delta'yi kullanarak dinamik text oluştur
+* [ ] 00X → | Bluff → BUG → B2: Caller kazanınca "+N YAKALANDI!" formatında text
+* [ ] 00X → | Bluff → BUG → B2: Playing test (3 senaryo: +20, +100, +0 + sahte yakalama)
+* [ ] 00X → | Bluff → BUG → B3: Client ScoreDisplay.updateScores → _bluffRevealing iken deferred update
+* [ ] 00X → | Bluff → BUG → B3: Reveal bitince deferred score güncellemelerini flush et
+* [ ] 00X → | Bluff → BUG → B3: Playing test (blof CALL sonrası skor reveal ile eşzamanlı)
+* [ ] 00X → | Bluff → BUG → B4: Client ScoreDisplay.onScoreUpdate → _bluffRevealing iken toast gösterme
+* [ ] 00X → | Bluff → BUG → B4: Alternatif — reveal sırasındaki scoreUpdate'leri kuyruğa al
+* [ ] 00X → | Bluff → BUG → B4: Playing test (reveal sırasında 2 yazı aynı pozisyonda olmamalı)
+* [ ] 00X → | Bluff → BUG → B5: ~~Client ScoreDisplay.showToast → toast ekledikten sonra animLayer tepeye~~ ⬅️ **F2A-2 LayerManager ile DONE**
+* [ ] 00X → | Bluff → BUG → B5: ~~Client ScoreDisplay.togglePanel → scorePanel ekledikten sonra animLayer tepeye~~ ⬅️ **F2A-2 ile DONE**
+* [ ] 00X → | Bluff → BUG → B5: ~~Her screen.addChild sonrası enforce setChildIndex(animLayer, last)~~ ⬅️ **F2A-2 ile DONE**
+* [ ] 00X → | Bluff → BUG → B5: Playing test (toast açıkken pile toplama, kartlar toast önünde uçuyor)
+* [ ] 00X → | Bluff → BUG → B6: ~~Client ScoreDisplay → activeToasts[] array tut~~ ⬅️ **F2C-5 ScoreToast ile DONE**
+* [ ] 00X → | Bluff → BUG → B6: ~~Yeni toast eklenirken aktif toast sayısına göre y offset~~ ⬅️ **F2C-5 ile DONE**
+* [ ] 00X → | Bluff → BUG → B6: ~~Toast kaybolunca array'den çıkar ve diğerlerini güncelle~~ ⬅️ **F2C-5 ile DONE**
+* [ ] 00X → | Bluff → BUG → B6: Playing test (ard arda scoreUpdate gelince toast'lar okunur)
+* [X] 00X → | Bluff → UI → I-U1: Yeni kart asset'leri seç/tasarla
+* [X] 00X → | Bluff → UI → I-U1: raw-assets/ → AssetPack ile spritesheet oluştur
+* [X] 00X → | Bluff → UI → I-U1: cardMapping.ts → yeni frame isimlerine güncelle
 * [ ] 00X → | Bluff → UI → I-U2: Yeni background asset'i (masa dokusu, vignette, ışık efekti)
 * [ ] 00X → | Bluff → UI → I-U2: GameScreen'e background sprite ekle
 * [ ] 00X → | Bluff → UI → I-U3: Her oyuncunun pişti sayısını takip et (server state'e ekle)
@@ -43,11 +129,11 @@
 * [ ] 00X → | Bluff → UI → I-U6: Kart dağıtılınca desteden kart çıkar animasyonu (opsiyonel)
 * [ ] 00X → | Bluff → UI → I-U7: Fade-in / fade-out geçiş efekti (300-400ms, ease-in-out)
 * [ ] 00X → | Bluff → UI → I-U7: Navigation plugin'e geçiş animasyonu ekle
-* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 1-3 (overlay + blur + pause)
-* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 4 (yavaş flip animasyonu)
-* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5a sonuç gerçek pişti (parlama + "+20 GERÇEK!" yazısı + shake + ses I-S2'de)
-* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5b sonuç sahte/yakalandı (kırmızı tint + "YAKALANDI!" yazısı + kırmızı flash + busted ses I-S2'de)
-* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 6-9 (sindirme → pile toplama → overlay kaldır → devam)
+* [X] 00X → | Bluff → GAME FEEL → I-GF0: Adım 1-3 (overlay + blur + pause)
+* [X] 00X → | Bluff → GAME FEEL → I-GF0: Adım 4 (yavaş flip animasyonu)
+* [X] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5a sonuç gerçek pişti (parlama + "+20 GERÇEK!" yazısı + shake + ses I-S2'de)
+* [X] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5b sonuç sahte/yakalandı (kırmızı tint + "YAKALANDI!" yazısı + kırmızı flash + busted ses I-S2'de)
+* [X] 00X → | Bluff → GAME FEEL → I-GF0: Adım 6-9 (sindirme → pile toplama → overlay kaldır → devam)
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Her atılan kart öncekinin üstüne hafif offset ile binmeli (3-5px x/y + 2-4 derece rotation)
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Son atılan kart en üstte, alttaki kartların kenarları görünmeli
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Pile 5+ kart olunca compact moda geç (offset azalır, kenarları hala görülsün)

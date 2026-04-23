@@ -25,165 +25,483 @@
 
 ---
 
-## REFACTOR — GameScreen Ayirma (Bug + GF oncesi)
+## REFACTOR — Clean Architecture (Bug + GF oncesi)
 
-> **Neden once?** GameScreen.ts 1344 satir ve tum game-feel + bug fix'ler buraya eklenecek.
-> Refactor OLMADAN ilerlemek dosyayi 2000+ satira cikarir ve her degisiklik riskli olur.
-> Refactor SIRASINDA davranis degismez — ayni animasyonlar, ayni timing, ayni akis.
+> **Neden once?** Sadece dosya ayirma yetmez — coupling devam ediyor. Her class
+> baska class'in internal state'ine (`public _xxx`) mudahale ediyor. Merkezi yonetim
+> yok (z-index, deferred state, events). Bu yapida bir yeri duzeltince baska yerde
+> sorun cikabilir.
+>
+> **Faz 1 — Dosya Ayirma (DONE):** GameScreen 1344 → 739 satir. 4 dosyaya bolundu.
+> **Faz 2 — Clean Architecture (AKTIF):** Agresif bolme, her dosya max 200 satir.
 
-### Mevcut Yapi (tek dosya, 1344 satir)
+---
 
-```
-GameScreen.ts
-├── Constructor + UI olusturma (1-216)
-├── Lifecycle: prepare, update, resize, show, hide (218-301)
-├── Reset: tum state temizleme (303-400)
-├── Socket listeners: setup + remove (402-442)
-├── State handlers: onRoomState, onYourHand, onCardPlayed (444-646)
-│   └── Deferred state: isAnimBusy, flushDeferredDeals, flushDeferredGameOver
-├── Render: renderTableCardNow, renderHand, layoutHand (648-762)
-├── Card selection + score: selectCard, playSelectedCard, shakeScreen (764-910)
-├── Animations: deal, play, collect (912-1266) ← EN BUYUK, 354 satir
-└── Bluff: panel, timer, resolve (1268-1344)
-```
+### NEREDE KALDIK?
 
-### Hedef Yapi (4 dosya)
+**Tamamlanan:** Faz 1 (4 adım), Bug B1, I-GF0, I-U1
+**Su an yapilacak:** **F2A-1 — BluffResolvedData extension**
+**Sirasi:** F2A-1 → F2A-2 → F2A-3 → F2A-4 → F2A-5 → F2B → F2C → F2D → F2E → Bug'lar → GF'ler
 
-```
-screens/
-├── GameScreen.ts          → Orchestrator (~500 satir)
-│   ├── Constructor + UI
-│   ├── Lifecycle (prepare, resize, reset)
-│   ├── Socket listeners
-│   ├── State handlers + deferred state
-│   ├── Render (renderState, renderHand, layoutHand)
-│   └── Card selection + play
-│
-├── GameAnimations.ts      → Animasyon yoneticisi (~400 satir)
-│   ├── animateDealHand()
-│   ├── animateOpponentDeal()
-│   ├── animatePlayCard()
-│   ├── animateOpponentPlay()
-│   ├── animateCollectPile()
-│   └── (gelecek: GF efektleri buraya eklenir)
-│
-├── BluffController.ts     → Blof UI + timer (~120 satir)
-│   ├── showBluffPanel()
-│   ├── startBluffTimer() / stopBluffTimer()
-│   ├── handleBluff()
-│   ├── onBluffResolved()
-│   └── (gelecek: GF0 reveal, GF6 gerilim buraya eklenir)
-│
-└── ScoreDisplay.ts        → Skor gosterimi + toast (~150 satir)
-    ├── updateScores()
-    ├── showScoreToast()
-    ├── shakeScreen()
-    └── (gelecek: GF5 floating text, puan efektleri buraya eklenir)
-```
+Her adim sonrasi:
+1. TypeScript check + ESLint + build
+2. Playing test (iki tarayici, oyun senaryosu)
+3. Her iki dosyada checkbox `[x]` isaretle
+4. Sonraki adim
 
-### Refactor Kurallari
+---
+
+### Refactor Kurallari (TUM FAZLAR ICIN)
 
 1. **Extract, rewrite degil** — metotlar oldugu gibi tasiniyor, logic degismiyor
-2. **GameScreen orchestrator kalir** — tum container'lar ve state GameScreen'de
-3. **Yeni dosyalar context alir** — constructor'da GameScreen referansi veya gerekli container'lar
-4. **Deferred state GameScreen'de kalir** — manager'lar sadece cagrilir, state yonetmez
-5. **`_screenGen` kontrolu korunur** — tum async callback'lerde generation check aynen kalir
-6. **Test: refactor oncesi ve sonrasi ayni davranis** — playing test ile dogrula
+2. **Davranis DEGISMEZ** — ayni animasyonlar, ayni timing, ayni akis
+3. **`_screenGen` kontrolu korunur** — tum async callback'lerde generation check
+4. **Her adim playing test ile dogrulanir** — bir sonraki adima gecmeden kontrol
+5. **Satir numaralari referanstir** — adim sonrasi kayar, metot adina gore bul
+6. **TypeScript strict + ESLint temiz** — her adim sonrasi 0 hata/uyari
 
-> **NOT:** Satir numaralari referans icin verilmistir. Her adim sonrasi diger adimlarin
-> satir numaralari kayar — metot adlarina gore bul, satir numarasina baglanma.
+### FAZ 1 — GameScreen Ayirma ✅ DONE
 
-### Adimlar
+**Sonuc:** GameScreen.ts 1344 → 739 satir. 4 dosyaya bolundu:
+- `GameScreen.ts` (739) — orchestrator
+- `GameAnimations.ts` (387) — deal/play/collect
+- `BluffController.ts` (400+) — panel + timer + reveal
+- `ScoreDisplay.ts` (212) — skor UI + toast + shake
 
-#### Adim 1 — `GameAnimations.ts` (en buyuk parca, ilk cikar)
+Playing test: tam akis dogrulandi (login → deal → play → collect → pisti → blof CALL/PASS → game over → reconnect).
 
-Tasinacak metotlar:
+Not: GameScreen 500 hedefine indirilemedi (739). Faz 2'de agresif bolme ile ~100'e cekilecek.
 
-- `animateDealHand(cards)` (satir 917-981)
-- `animateOpponentDeal(count)` (satir 984-1033)
-- `animatePlayCard(sprite)` (satir 1036-1098)
-- `animateOpponentPlay(cardId)` (satir 1101-1196)
-- `animateCollectPile()` (satir 1199-1266)
+---
 
-Bagimliliklar:
+### FAZ 2 — Agresif Clean Architecture (TOP PRIORITY — BUG'LARDAN ONCE)
 
-- `animLayer`, `tableArea`, `playerHandContainer`, `opponentHandContainer` → constructor'da alinir
-- `_screenGen` → her animasyon cagirisinda parametre olarak verilir
-- `CARD_SCALE`, `TABLE_CARD_SCALE`, `OPPONENT_CARD_SCALE` → const olarak tasiniyor
-- `DEAL_DURATION`, `DEAL_STAGGER`, `PLAY_DURATION`, `COLLECT_DURATION` → const olarak tasiniyor
-- `CardSprite`, `parseCardId` → import edilir
-- Callback'ler (flushDeferredTableCard, flushDeferredDeals, animateCollectPile) → GameScreen'den fonksiyon referansi
+> **Hedef:** Her dosya **max 200 satir**, cogu 50-150 arasi. Tek sorumluluk.
+> `engine/` klasoru gibi: her dosya tek isi yapar, acik adli, stabil.
+>
+> **Yeni dosya sayisi:** Client ~20, Server ~10. Cok dosya ama her biri kucuk ve fokuslu.
+> Yeni feature gelince mevcut dosya buyumez — yeni dosya eklenir.
 
-Sira: Ilk cikar cunku en buyuk parca (354 satir) ve diger adimlara bagimli degil.
+#### HEDEF YAPI (agresif bolme)
 
-- [X] Dosya olustur, metotlari tasi
-- [X] GameScreen'de `this.animations = new GameAnimations(...)` olustur
-- [X] Tum cagrilari `this.animations.xxx()` olarak guncelle
-- [X] Playing test: kart oyna, dagitim, toplama → ayni animasyonlar
+```
+client/src/app/screens/
+├── GameScreen.ts                    → ~100 satir ORCHESTRATOR
+│
+├── game/                            → GameScreen alt modulleri
+│   ├── GameLifecycle.ts             → prepare/show/hide/reset (~100)
+│   ├── GameLayout.ts                → resize + positioning (~80)
+│   ├── GameSocketHandler.ts         → socket subscribe + dispatch (~80)
+│   ├── GameStateController.ts       → onRoomState/onYourHand/onCardPlayed (~150)
+│   ├── CardSelector.ts              → selectCard/playSelectedCard (~80)
+│   ├── LayerManager.ts              → z-index merkezi (~50)
+│   └── DeferredActions.ts           → deferred state queue (~100)
+│
+├── ui/                              → Saf UI componentleri
+│   ├── HandArea.ts                  → hand render + layout (~100)
+│   ├── TableArea.ts                 → pile + topCard + pileCountLabel (~100)
+│   ├── TurnIndicator.ts             → turn label (~40)
+│   ├── BluffPanel.ts                → CALL/PASS + timer UI (~100)
+│   ├── ScorePanel.ts                → left-top score labels (~80)
+│   ├── DeckCounter.ts               → deste sayaci gorsel (~60)
+│   └── CupButton.ts                 → right-bottom cup toggle (~40)
+│
+└── effects/                         → Animasyonlar + juice
+    ├── DealEffect.ts                → deal animation (~120)
+    ├── PlayEffect.ts                → play card (~100)
+    ├── CollectEffect.ts             → collect pile (~120)
+    ├── RevealEffect.ts              → I-GF0 reveal ani (~200)
+    ├── ScoreToast.ts                → toast animation (~100)
+    ├── FlashEffect.ts               → generic screen flash (~40)
+    └── ShakeEffect.ts               → screen shake helper (~40)
 
-#### Adim 2 — `BluffController.ts`
+server/src/game/
+├── game.gateway.ts                  → ~150 satir (sadece routing)
+├── game.service.ts                  → ~100 satir ORCHESTRATOR
+│
+├── state/
+│   ├── GameStateManager.ts          → Map<roomId, state> + CRUD (~80)
+│   ├── GameInitializer.ts           → startGame + dealHands (~100)
+│   └── StateMasking.ts              → maskStateForPlayer (~60)
+│
+├── flow/
+│   ├── PlayCardHandler.ts           → playCard flow (~120)
+│   ├── ResolveBluffHandler.ts       → resolveBluff (~150)
+│   └── RefillOrEndHandler.ts        → checkRefillOrEnd (~80)
+│
+├── events/
+│   ├── GameEventEmitter.ts          → socket emit helper (~80)
+│   └── GameEventTypes.ts            → typed event union (~60)
+│
+└── timers/
+    └── BluffTimer.ts                → 30s auto-PASS (~40)
+```
 
-Tasinacak metotlar:
+**Eski Yeni Karsilastirma:**
 
-- `showBluffPanel()` (satir 1272-1277)
-- `startBluffTimer()` (satir 1279-1291)
-- `stopBluffTimer()` (satir 1293-1300)
-- `handleBluff(decision)` (satir 1302-1306)
-- `onBluffResolved(data)` (satir 1308-1343)
+| Dosya | Eski | Yeni (hedef) |
+|-------|------|--------------|
+| GameScreen.ts | 739 | ~100 |
+| GameAnimations.ts | 387 | silinir → 3 effect dosyasina bolunur |
+| BluffController.ts | 400+ | silinir → BluffPanel + RevealEffect |
+| ScoreDisplay.ts | 212 | silinir → ScorePanel + ScoreToast + CupButton |
+| game.service.ts (server) | 428 | ~100 orchestrator + 6 helper dosya |
+| game.gateway.ts (server) | 381 | ~150 (emitter + events ayri) |
 
-Bagimliliklar:
+---
 
-- `bluffPanel`, `bluffTimerLabel`, `callButton`, `passButton` → constructor'da olusturulur veya alinir
-- `pileBackCards` referansi → GameScreen'den getter ile
-- `_screenGen` → parametre olarak
-- `_bluffRevealing`, `_collectWinnerId` → state callback ile GameScreen'e bildirilir
-- `socketService.bluffDecision()` → import
+### FAZ 2 Alt-Fazlar (sirayla uygulanir)
 
-Sira: Animasyonlardan sonra, cunku `onBluffResolved` icerisinde animasyon tetikliyor.
+#### FAZ 2A — Cross-cutting foundation (ilk yapilacaklar)
 
-- [X] Dosya olustur, metotlari tasi
-- [X] Bluff paneli UI olusturmayi BluffController constructor'ina tasi
-- [X] GameScreen'de `this.bluff = new BluffController(...)` olustur
-- [X] Playing test: blof yap, CALL, PASS, timeout → ayni davranis
+##### F2A-1 — BluffResolvedData extension ⬅️ ILK YAPILACAK
 
-#### Adim 3 — `ScoreDisplay.ts`
+**Neden:** B2 bug temeli. Server delta gondersin, client dinamik text yapsin.
 
-Tasinacak metotlar:
+**Degisecek dosyalar:**
+- `server/src/shared/types.ts` — BluffResolvedData interface
+- `client/src/shared/types.ts` — kopya
+- `server/src/game/game.service.ts` — resolveBluff event push
+- `server/src/game/game.gateway.ts` — bluffResolved emit
+- `client/src/game/services/SocketService.ts` — tip
 
-- `onScoreUpdate(data)` (satir 826-838)
-- `showScoreToast(label, total, isMe)` (satir 840-874)
-- `shakeScreen()` (satir 797-808)
-- `toggleScorePanel()` (satir 810-824)
-- Skor label'lari guncelleme logic'i (renderState icinden extract)
+**Davranis degismeyecek:** Client henuz kullanmayacak (sadece alacak).
 
-Bagimliliklar:
+- [ ] `BluffResolvedData`'ya `blufferDelta: number` + `callerDelta: number` ekle (server + client kopya)
+- [ ] Server: resolveBluff 3 branch'inde (PASS, CallReal, CallFake) delta'lari event'e koy
+- [ ] Gateway: emit'te forward et
+- [ ] Playing test: blof CALL at → console'da bluffResolved event'inde delta geliyor mu kontrol
 
-- `scoreContainer` ve icerisindeki label'lar → constructor'da olusturulur
-- `scoreInfoBtn` → event binding
-- `ScorePanel` → import
-- `myScoreEvents[]` → ScoreDisplay'de tutulur
-- `engine()` → screen boyutu icin
+##### F2A-2 — LayerManager
 
-Sira: En son, cunku en az bagimlilik var ve diger adimlari etkilemiyor.
+**Dosya:** `client/src/app/screens/game/LayerManager.ts` (~50 satir)
 
-- [X] Dosya olustur, metotlari tasi
-- [X] Skor UI olusturmayi ScoreDisplay constructor'ina tasi
-- [X] GameScreen'de `this.score = new ScoreDisplay(...)` olustur
-- [X] Playing test: puan degisimi, toast, shake, score panel → ayni davranis
+**API:**
+```typescript
+class LayerManager {
+  constructor(private screen: Container) {}
+  addPersistent(child: Container, priority: number): void
+  addOverlay(child: Container): void
+  ensureTopMost(target: Container): void
+}
+```
 
-#### Adim 4 — Final dogrulama
+- [ ] Dosya olustur
+- [ ] GameScreen ctor'da instance
+- [ ] Tum `screen.addChild` → `layers.addXxx()` migrate
+- [ ] Playing test: toast/overlay/animLayer dogru sirada
 
-- [X] GameScreen.ts ~500 satir olmali (orchestrator) — **gerceklesen: 739 satir** (hedeften +239, kabul edilebilir)
-- [X] Tum dosyalar TypeScript strict mode hatasi yok
-- [X] Playing test (tam akis):
-  1. Login → lobby → oyun basla (deal animasyonu)
-  2. Kart sec → oyna (play animasyonu)
-  3. Eslesme → pile toplama (collect animasyonu)
-  4. Pisti → skor toast + shake
-  5. Blof → CALL → reveal → pile toplama
-  6. Blof → PASS → pile blofcuya
-  7. Son el → game over ekrani
-  8. Reconnect → state restore
+##### F2A-3 — DeferredActions
+
+**Dosya:** `client/src/app/screens/game/DeferredActions.ts` (~100 satir)
+
+**API:**
+```typescript
+type DeferredAction =
+  | { type: 'collect' }
+  | { type: 'tableCard'; card: ICard | null }
+  | { type: 'dealHand'; cards: ICard[] }
+  | { type: 'dealOpponent'; count: number }
+  | { type: 'gameOver'; data: GameOverData };
+
+class DeferredActions {
+  add(action: DeferredAction): void
+  flush(types?: DeferredAction['type'][]): void
+  isBusy(): boolean
+  clear(): void
+}
+```
+
+- [ ] Dosya olustur
+- [ ] GameScreen'deki 6+ `_deferredXxx` field'larini kaldir
+- [ ] Her defer noktasinda `deferred.add(...)` kullan
+- [ ] Playing test: blof CALL + rapid play → race yok
+
+##### F2A-4 — Server event/types extraction
+
+**Dosyalar:**
+- `server/src/game/events/GameEventTypes.ts` (~60)
+- `server/src/game/events/GameEventEmitter.ts` (~80)
+
+- [ ] Typed union `GameEvent` tanimla
+- [ ] `GameEventEmitter` class (scoreUpdate/bluffResolved/cardPlayed vs metotlari)
+- [ ] Gateway'de inject et, tum `server.to().emit()` migrate
+- [ ] Playing test: tum event'ler hala dogru client'a gidiyor
+
+##### F2A-5 — Central constants
+
+**Dosya:** `server/src/shared/game-constants.ts` (client kopyasi ile)
+
+```typescript
+export const TIMING = { BLUFF_DECISION_MS: 30_000, DISCONNECT_GRACE_MS: 30_000 };
+export const HAND_SIZE = 4;
+export const INITIAL_TABLE_CARDS = 4;
+```
+
+- [ ] Dosya olustur
+- [ ] Tum magic number'lari import et
+
+---
+
+#### FAZ 2B — UI component extraction (mevcut render logic'i bol)
+
+##### F2B-1 — TableArea
+
+**Dosya:** `client/src/app/screens/ui/TableArea.ts` (~100)
+
+Icerik: Container subclass. `renderTableCardNow()` + `pileBackCards` + `pileCountLabel` + bluff back card logic.
+
+- [ ] Dosya olustur, GameScreen'den logic tasi
+- [ ] API: `setTopCard(card)`, `clear()`, `getBackCards()`, `flushDeferredCard()`
+- [ ] GameScreen'de `this.tableArea = new TableArea()` olarak kullan
+- [ ] Playing test: pile render + bluff back dogru
+
+##### F2B-2 — HandArea
+
+**Dosya:** `client/src/app/screens/ui/HandArea.ts` (~100)
+
+Icerik: Container subclass. `renderHand()` + `layoutHand()` + `renderOpponentHand()` + `layoutOpponentHand()`.
+
+Not: Tek sinif iki mod destekler (player=interactive, opponent=face-down).
+
+- [ ] Dosya olustur, hem player hem opponent icin kullanilabilir
+- [ ] API: `setCards(cards)`, `select(index)`, `clear()`, `count`
+- [ ] GameScreen'de iki instance: `playerHand`, `opponentHand`
+- [ ] Playing test: render + secim dogru
+
+##### F2B-3 — TurnIndicator
+
+**Dosya:** `client/src/app/screens/ui/TurnIndicator.ts` (~40)
+
+- [ ] Dosya olustur, Label wrapper
+- [ ] API: `setPhase(phase, isMyTurn)`
+- [ ] Playing test: sira yazisi dogru
+
+##### F2B-4 — BluffPanel
+
+**Dosya:** `client/src/app/screens/ui/BluffPanel.ts` (~100)
+
+Icerik: BluffController'in panel + timer kismi (reveal DEGIL — o effects'e tasinacak).
+
+- [ ] Dosya olustur, sadece UI + timer
+- [ ] API: `show()`, `hide()`, `onDecision(callback)`, `reset()`
+- [ ] Playing test: panel gorunumu + timer calisir
+
+##### F2B-5 — ScorePanel + CupButton
+
+**Dosyalar:**
+- `client/src/app/screens/ui/ScorePanel.ts` (~80)
+- `client/src/app/screens/ui/CupButton.ts` (~40)
+
+ScoreDisplay'i bol:
+- ScorePanel = sol ust label'lar (persistent)
+- CupButton = sag alt kupa + detail panel toggle
+
+- [ ] ScorePanel dosyasi
+- [ ] CupButton dosyasi (detail panel toggle icerir)
+- [ ] API: ScorePanel.update(me, opponent, deckCount), CupButton.onClick
+- [ ] Playing test: skor label'lar + kupa butonu calisir
+
+##### F2B-6 — DeckCounter
+
+**Dosya:** `client/src/app/screens/ui/DeckCounter.ts` (~60)
+
+Mevcut: deckRemainingLabel sadece text. Gelecek I-GF11 icin ayri component.
+
+- [ ] Dosya olustur, deste ikonu + sayi
+- [ ] API: `setCount(n)`, `flash()` (son el vurgusu)
+- [ ] ScorePanel'den ayir
+
+---
+
+#### FAZ 2C — Effects extraction (animasyon + juice)
+
+##### F2C-1 — DealEffect
+
+**Dosya:** `client/src/app/screens/effects/DealEffect.ts` (~120)
+
+GameAnimations.ts'deki `animateDealHand` + `animateOpponentDeal`.
+
+- [ ] Dosya olustur, metotlari tasi
+- [ ] API: `dealPlayerHand(cards)`, `dealOpponentHand(count)`
+- [ ] Playing test: dagitim animasyonu ayni
+
+##### F2C-2 — PlayEffect
+
+**Dosya:** `client/src/app/screens/effects/PlayEffect.ts` (~100)
+
+GameAnimations.ts'deki `animatePlayCard` + `animateOpponentPlay`.
+
+- [ ] Dosya olustur, metotlari tasi
+- [ ] API: `playerPlay(sprite)`, `opponentPlay(cardId)`
+- [ ] Playing test: kart oynama animasyonu ayni
+
+##### F2C-3 — CollectEffect
+
+**Dosya:** `client/src/app/screens/effects/CollectEffect.ts` (~120)
+
+GameAnimations.ts'deki `animateCollectPile`.
+
+- [ ] Dosya olustur, metotlari tasi
+- [ ] API: `collectPile(winnerId, pileBackCards, tableCard)`
+- [ ] Playing test: pile toplama animasyonu ayni
+
+##### F2C-4 — RevealEffect
+
+**Dosya:** `client/src/app/screens/effects/RevealEffect.ts` (~200)
+
+BluffController'daki 9 adimlik reveal logic'i. En buyuk effect dosyasi.
+
+- [ ] Dosya olustur, onResolved'daki tum reveal adimlari
+- [ ] API: `reveal(bluffBack, data)`, `cleanup()`
+- [ ] FlashEffect + ShakeEffect kullanir (helper)
+- [ ] Playing test: blof CALL reveal ayni
+
+##### F2C-5 — ScoreToast
+
+**Dosya:** `client/src/app/screens/effects/ScoreToast.ts` (~100)
+
+ScoreDisplay.showToast + toast management (B6 fix).
+
+- [ ] Dosya olustur
+- [ ] API: `show(data, options)`, `clearAll()`
+- [ ] activeToasts[] queue + offset (B6 temel)
+- [ ] Playing test: ardarda scoreUpdate okunur
+
+##### F2C-6 — FlashEffect + ShakeEffect
+
+**Dosyalar:**
+- `effects/FlashEffect.ts` (~40)
+- `effects/ShakeEffect.ts` (~40)
+
+Helper — her yerde kullanilabilir.
+
+- [ ] FlashEffect: `flash(screen, color, duration)`
+- [ ] ShakeEffect: `shake(target, intensity, duration)`
+- [ ] ScoreDisplay.shake + RevealEffect.shake bunu kullansin
+
+---
+
+#### FAZ 2D — Game module extraction (GameScreen iskelet)
+
+##### F2D-1 — GameLifecycle
+
+**Dosya:** `client/src/app/screens/game/GameLifecycle.ts` (~100)
+
+`prepare()`, `show()`, `hide()`, `reset()` GameScreen'den cikar.
+
+- [ ] Dosya olustur
+- [ ] API: GameScreen instance alir, lifecycle methodlarini export eder
+- [ ] Playing test: ekran gecisleri ayni
+
+##### F2D-2 — GameLayout
+
+**Dosya:** `client/src/app/screens/game/GameLayout.ts` (~80)
+
+`resize()` icerigi cikar. Container koordinatlari hesaplar.
+
+- [ ] Dosya olustur
+- [ ] API: `layout(width, height, components)`
+- [ ] Playing test: resize dogru
+
+##### F2D-3 — GameSocketHandler
+
+**Dosya:** `client/src/app/screens/game/GameSocketHandler.ts` (~80)
+
+`setupSocketListeners` + `removeSocketListeners` cikar. Event'leri domain handler'lara dispatch eder.
+
+- [ ] Dosya olustur
+- [ ] API: `setup(callbacks)`, `teardown()`
+- [ ] Playing test: tum socket event'leri calisiyor
+
+##### F2D-4 — GameStateController
+
+**Dosya:** `client/src/app/screens/game/GameStateController.ts` (~150)
+
+`onRoomState`, `onYourHand`, `onCardPlayed` logic'i.
+
+- [ ] Dosya olustur
+- [ ] Deferred state kullanir (F2A-3)
+- [ ] UI component'lere delege eder (F2B)
+- [ ] Playing test: state gecisleri dogru
+
+##### F2D-5 — CardSelector
+
+**Dosya:** `client/src/app/screens/game/CardSelector.ts` (~80)
+
+`selectCard`, `playSelectedCard`, `updateHiddenPlayButton` cikar.
+
+- [ ] Dosya olustur
+- [ ] API: `select(index)`, `play(isHidden)`
+- [ ] Playing test: kart secimi + oynama dogru
+
+##### F2D-6 — GameScreen iskelet
+
+**Hedef:** GameScreen.ts ~100 satir. Sadece:
+- Constructor: component'leri olustur + baglar
+- Update tick delegate
+- Module'lere baglanti
+
+- [ ] GameScreen'i 100 satira indir
+- [ ] Tum logic alt module'lere gitmis olmali
+- [ ] Playing test: tam akis ayni
+
+---
+
+#### FAZ 2E — Server refactor (paralel alt-faz)
+
+##### F2E-1 — Server state/ extraction
+
+**Dosyalar:**
+- `server/src/game/state/GameStateManager.ts` (~80) — Map<roomId, state>
+- `server/src/game/state/GameInitializer.ts` (~100) — startGame
+- `server/src/game/state/StateMasking.ts` (~60) — maskStateForPlayer
+
+- [ ] 3 dosya olustur, game.service.ts'den cikar
+- [ ] GameService bunlari inject edip kullansin
+- [ ] Playing test: oyun baslangic + state maskeleme
+
+##### F2E-2 — Server flow/ extraction
+
+**Dosyalar:**
+- `server/src/game/flow/PlayCardHandler.ts` (~120)
+- `server/src/game/flow/ResolveBluffHandler.ts` (~150)
+- `server/src/game/flow/RefillOrEndHandler.ts` (~80)
+
+- [ ] 3 dosya olustur, game.service.ts'den cikar
+- [ ] ResolveBluffHandler icinde private metotlar (Pass/CallReal/CallFake)
+- [ ] Playing test: kart oynama + blof + el sonu
+
+##### F2E-3 — Server timer extraction
+
+**Dosya:** `server/src/game/timers/BluffTimer.ts` (~40)
+
+- [ ] game.gateway.ts'deki startBluffTimer/clearBluffTimer cikar
+- [ ] Playing test: 30s timeout
+
+##### F2E-4 — Server final: gateway/service trim
+
+**Hedef:** game.gateway.ts ~150, game.service.ts ~100.
+
+- [ ] Gateway sadece routing (handlers thin)
+- [ ] Service sadece orchestrator (tum logic handler'larda)
+- [ ] Playing test: tam oyun akisi ayni
+
+---
+
+### REFACTOR KURALI — Uygulama Sirasi
+
+**Onemli:** Her alt-faz playing test ile dogrulanmali. Bir sonraki faza gecmeden mevcut davranisin bozulmadigi kontrol edilmeli.
+
+**Sira:**
+1. FAZ 2A (foundation) — diger fazlar buna bagli
+2. FAZ 2B (UI) — paralel F2C ile baslanabilir
+3. FAZ 2C (effects) — F2B ile paralel
+4. FAZ 2D (game module) — F2A/2B/2C bittikten sonra
+5. FAZ 2E (server) — istedigimiz zaman, client paralel calisabilir
+
+**Game-feel (I-GF) maddeleri:** Refactor bitince hedef dosyalar var olacak.
+Yeni kod zaten kucuk dosyalara gider — GameScreen'e eklenmez.
 
 ---
 
@@ -197,6 +515,116 @@ ve collect animasyonu yanlis yone gidiyor. Ayni sorunun server (sahiplik) ve cli
 - [X] Server: `resolveBluff()` → PASS case'inde pile blofcuya atanmali
 - [X] Client: `_collectWinnerId` → collect animasyonu blofcu yonune gitmeli
 - [X] Playing test: PASS → pile blofcuya gidiyor + animasyon dogru yon
+
+### B2 — Reveal text hardcoded puan uyumsuzlugu
+
+Blof CALL reveal'inda gosterilen "+20 GERCEK!" yazisi hardcoded.
+Gercek puan serverdan gelen blufferDelta'ya gore degisir:
+
+| Durum | Gercek puan | Su an gosterilen |
+|-------|-------------|------------------|
+| CALL + rank match | +20 | "+20 GERCEK!" ✓ |
+| CALL + wildcard+normal | +0 | "+20 GERCEK!" ❌ |
+| CALL + wildcard+wildcard | +100 | "+20 GERCEK!" ❌ |
+| CALL + sahte (fake) | caller +10 | "YAKALANDI!" (no puan) |
+
+**Kaynak:** `BluffController.ts:178` — hardcoded string
+**Kok sebep:** `BluffResolvedData` event'inde delta bilgisi yok
+
+> ⚠️ **NOT:** Ilk 2 task F2A-1 (REFACTOR) ile otomatik tamamlanir.
+> B2'ye gelindiginde sadece client tarafi (2 task) kalmis olacak.
+
+- [ ] ~~Server: `BluffResolvedData` tipine `blufferDelta` + `callerDelta` ekle~~ → **F2A-1 ile done**
+- [ ] ~~Server: `game.gateway.ts` bluffResolved emit'inde delta'lari gonder~~ → **F2A-1 ile done**
+- [ ] Client: `BluffController.onResolved` → delta'yi kullanarak dinamik text olustur
+- [ ] Caller kazaninca `"+N YAKALANDI!"` formatinda text (caller puanini gosterir)
+- [ ] Playing test: 3 farkli senaryo (+20, +100, +0) ve sahte yakalama
+
+### B3 — Score panel reveal oncesi guncelleniyor (sync yok)
+
+Event sirasi: `scoreUpdate` → `bluffResolved` → `roomState`.
+`roomState` geldiginde `score.updateScores` tetiklenir ve sol panelde yeni skor hemen gosterilir.
+Kullanici dramatik reveal ANIMAsonu baslamadan "+100" puani sol panelde gorur.
+
+**Senaryo:** Blof CALL + wildcard+wildcard (+100)
+- t=0: scoreUpdate toast ortada gorunur ("+100")
+- t=0: roomState ile playerScoreLabel = "100" (sol panel)
+- t=0.3: dim overlay aciliyor
+- t=2.0: flip bitiyor, "+20 GERCEK!" yazisi cikiyor (uyumsuzluk!)
+
+**Kaynak:** `GameScreen.ts` renderState → `score.updateScores` her zaman calisir
+**Kok sebep:** Reveal devam ederken score panel guncelleniyor
+
+- [ ] Client: `ScoreDisplay.updateScores` → `_bluffRevealing=true` iken deferred update
+- [ ] Reveal bitince deferred score guncellemelerini flush et
+- [ ] Alternatif: BluffController reveal bitince scoreDisplay.flushDeferredScores() cagirsin
+- [ ] Playing test: blof CALL sonrasi skor reveal ile ESZAMANLI guncellenir
+
+### B4 — Toast + result label pozisyon cakismasi
+
+Score toast (`ScoreDisplay.showToast`) ve reveal result label (`BluffController.showResultText`) cakiliyor:
+
+| Eleman | Pozisyon | Boyut |
+|--------|----------|-------|
+| Toast | y = height/2 - 40 | fontSize 36 |
+| Result label | y = height/2 - 80 | fontSize 72 |
+
+**Senaryo:** Blof CALL esnasinda scoreUpdate geldiginde:
+- t=0: toast cikar (ekran ortasi)
+- t=2.0: result label cikar (40px yukarida)
+- Her ikisi ayni anda 800ms+ birlikte gorunur → gorsel clutter
+
+**Kok sebep:** Toast reveal sirasinda suppress edilmiyor.
+
+- [ ] Client: `ScoreDisplay.onScoreUpdate` → `_bluffRevealing=true` iken toast GOSTERME
+- [ ] Alternatif: Reveal sirasindaki scoreUpdate'leri kuyruga al, reveal bitince goster
+- [ ] Playing test: blof CALL reveal akisi sirasinda ayni pozisyonda 2 yazi gozukmesin
+
+### B5 — animLayer z-index tutarsizligi
+
+animLayer cross-container animasyonlar icin kullanilan en ust katman (kart ucusu). Ancak:
+
+**Sorunlu noktalar:**
+- `ScoreDisplay.ts:201` — `this.screen.addChild(toast)` → toast animLayer ustune cikar
+- `ScoreDisplay.ts:175` — `this.screen.addChild(this.scorePanel)` → panel animLayer ustune cikar
+- Diger `screen.addChild` yerleri animLayer'i tepeye iade etmez
+
+**Senaryo:** Toast acikken collect animasyonu baslar → kart toast'in ALTINDAN ucar → kart gozukmez
+
+**Kok sebep:** Merkezi layer management yok, her fonksiyon kendi ekler.
+
+> ✅ **NOT:** B5 **F2A-2 (LayerManager)** ile otomatik cozulur.
+> LayerManager tum `addChild` cagrilarini merkezi yonetir, animLayer her zaman tepede.
+> F2A-2 bittikten sonra B5'in manuel task'ina gerek kalmaz — sadece playing test yap.
+
+- [ ] ~~Client: `ScoreDisplay.showToast` → toast ekledikten sonra animLayer tepeye~~ → **F2A-2 ile done**
+- [ ] ~~Client: `ScoreDisplay.togglePanel` → scorePanel ekledikten sonra animLayer tepeye~~ → **F2A-2 ile done**
+- [ ] ~~Client: Her `screen.addChild` sonrasi enforce: `setChildIndex(animLayer, last)`~~ → **F2A-2 ile done**
+- [ ] Playing test: Toast acikken pile toplama → kartlar toast onunde ucuyor mu
+
+### B6 — Multiple toast stacking
+
+Tek hamlede birden fazla `scoreUpdate` gelirse (ornek: pile alindi + pisti + card values),
+toast'lar AYNI pozisyonda ust uste biner, okunmaz.
+
+**Senaryo:** Pisti yapildi → scoreUpdate olaylari:
+1. Kart deger puani (+2 C2)
+2. Pisti bonus (+10)
+3. (opsiyonel) Flush bonus dagitimda
+
+Hepsi ayni anda ayni pozisyonda belirir.
+
+**Kok sebep:** Toast queue/offset yok.
+
+> ✅ **NOT:** B6 **F2C-5 (ScoreToast)** ile otomatik cozulur.
+> F2C-5 task'inda zaten "activeToasts[] yonetim (B6 temel)" yaziyor — yeni ScoreToast
+> dosyasi queue/offset sistemini barindiracak. F2C-5 bittikten sonra B6 manuel fix'e
+> gerek kalmaz — sadece playing test yap.
+
+- [ ] ~~Client: `ScoreDisplay` → `activeToasts[]` array tut~~ → **F2C-5 ile done**
+- [ ] ~~Yeni toast eklenirken aktif toast sayisina gore y offset (ornek: i × 50px asagida)~~ → **F2C-5 ile done**
+- [ ] ~~Toast kaybolunca array'den cikar ve diger toast'larin pozisyonunu guncelle~~ → **F2C-5 ile done**
+- [ ] Playing test: Ard arda scoreUpdate gelince toast'lar okunur sekilde gozuksun
 
 ---
 
@@ -261,13 +689,22 @@ Lobby → Game → GameOver arasi gecisler keskin, puruzsuz olmali.
 
 ### GAME FEEL
 
-> **Hedef dosya rehberi (refactor sonrasi):**
+> **Hedef dosya rehberi (Faz 2 refactor sonrasi):**
 >
-> - Animasyon maddeleri (GF0-GF4, GF7) → `GameAnimations.ts`
-> - Blof efektleri (GF0, GF6) → `BluffController.ts`
-> - Puan efektleri (GF5) → `ScoreDisplay.ts`
-> - UI/render maddeleri (GF1, GF3, GF9, GF10, GF11) → `GameScreen.ts`
-> - Kart secim (GF9) → `GameScreen.ts`
+> | Madde | Hedef dosya |
+> |-------|-------------|
+> | I-GF0 reveal | `effects/RevealEffect.ts` |
+> | I-GF1 pile stacking | `ui/TableArea.ts` |
+> | I-GF2 kart oynama | `effects/PlayEffect.ts` |
+> | I-GF3 eslesmedi feedback | `effects/PlayEffect.ts` + `ui/TableArea.ts` |
+> | I-GF4 pile toplama | `effects/CollectEffect.ts` |
+> | I-GF5 puan efektleri | `effects/ScoreToast.ts` |
+> | I-GF6 blof gerilim | `ui/BluffPanel.ts` + `effects/RevealEffect.ts` |
+> | I-GF7 kart dagitim | `effects/DealEffect.ts` |
+> | I-GF8 oyun sonu | `screens/GameOverScreen.ts` |
+> | I-GF9 kart secim | `game/CardSelector.ts` + `ui/HandArea.ts` |
+> | I-GF10 rakip gostergesi | `ui/HandArea.ts` + `ui/TurnIndicator.ts` |
+> | I-GF11 deste azalma | `ui/DeckCounter.ts` |
 >
 > **Tamamlanma kriteri:** Her madde playing test ile dogrulanir.
 > Animasyonlar oynanir, spec'teki his saglanir. Kullanici "tamam" derse done.
@@ -565,9 +1002,16 @@ Yeni kural: Blof'ta sadece rank eslesmesi "gercek" sayilir. J/Joker ile yapilan 
 
 | Grup                     | Oncelik      | Aciklama                                    |
 | ------------------------ | ------------ | ------------------------------------------- |
-| REFACTOR                 | 0 - ONKOŞUL | GameScreen ayirma — tum GF/BUG oncesi      |
-| BUG (B1)                 | 1 - ACIL     | Pile/kart yonu bozuk, once duzelt           |
-| I-GF0                    | 2 - YUKSEK   | Blof reveal — oyunun kalbi, en dramatik an |
+| REFACTOR Faz 1           | 0 - ONKOŞUL | GameScreen ayirma — DONE                   |
+| BUG (B1)                 | 1 - ACIL     | Pile/kart yonu bozuk — DONE                 |
+| I-GF0                    | 2 - YUKSEK   | Blof reveal — DONE (refactor sirasinda effects/RevealEffect'e tasinacak) |
+| REFACTOR Faz 2A          | 2.1 - ACIL  | Foundation: BluffResolvedData + LayerManager + DeferredActions + events + constants |
+| REFACTOR Faz 2B          | 2.2 - ACIL  | UI component extraction (7 dosya)           |
+| REFACTOR Faz 2C          | 2.3 - ACIL  | Effects extraction (7 dosya)                |
+| REFACTOR Faz 2D          | 2.4 - YUKSEK | GameScreen iskelet (~100 satir hedef)      |
+| REFACTOR Faz 2E          | 2.5 - YUKSEK | Server refactor (state + flow + timers)     |
+| BUG (B2, B3, B4)         | 2.6 - ACIL   | UI sync bugs (refactor sonrasi 10x kolay)   |
+| BUG (B5, B6)             | 2.7 - YUKSEK | Z-index + toast (F2A LayerManager ile bag)  |
 | I-U4, I-U5               | 3 - YUKSEK   | Blof paneli + sira gostergesi net olmali    |
 | I-GF1, I-GF2, I-GF3      | 4 - YUKSEK   | Kart yiginlama + oynama + eslesmeme hissi   |
 | I-GF6                    | 5 - YUKSEK   | Blof gerilim efektleri (reveal'i tamamlar)  |
