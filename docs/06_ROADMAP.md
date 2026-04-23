@@ -305,19 +305,19 @@ Bu an oyuncuya "hersey bu ana bagliyor" hissini vermeli.
 8. Overlay kalkar (400ms fade-out)
 9. Normal oyun devam eder
 
-- [ ] Adim 1-3: overlay + blur + pause
-- [ ] Adim 4: yavas flip animasyonu
-- [ ] Adim 5a — sonuc gercek pisti:
+- [x] Adim 1-3: overlay + blur + pause
+- [x] Adim 4: yavas flip animasyonu
+- [x] Adim 5a — sonuc gercek pisti:
   - Kart acilir → parlama efekti (beyaz flash, 200ms)
   - Buyuk yazi: "+20 GERCEK!" (scale 0→1 bounce, sonra fade-out)
   - Screen shake (hafif, 300ms)
-  - Ses: zafer "sting" sesi
-- [ ] Adim 5b — sonuc sahte (yakalandi):
+  - ~~Ses: zafer "sting" sesi~~ (I-S2'de eklenecek)
+- [x] Adim 5b — sonuc sahte (yakalandi):
   - Kart acilir → kirmizi tint flash (200ms)
   - Buyuk yazi: "YAKALANDI!" (scale 0→1, kirmizi renk)
   - Blofcunun el bolgesi kisa kirmizi flash
-  - Ses: "busted" sesi (kisa, dramatik)
-- [ ] Adim 6-9: sindirme → pile toplama → overlay kaldir → devam
+  - ~~Ses: "busted" sesi~~ (I-S2'de eklenecek)
+- [x] Adim 6-9: sindirme → pile toplama → overlay kaldir → devam
 
 #### I-GF1 — Kart yiginlama gorunumu (pile stacking)
 

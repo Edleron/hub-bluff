@@ -43,11 +43,11 @@
 * [ ] 00X → | Bluff → UI → I-U6: Kart dağıtılınca desteden kart çıkar animasyonu (opsiyonel)
 * [ ] 00X → | Bluff → UI → I-U7: Fade-in / fade-out geçiş efekti (300-400ms, ease-in-out)
 * [ ] 00X → | Bluff → UI → I-U7: Navigation plugin'e geçiş animasyonu ekle
-* [ ] 00X → | Bluff → GAME FEEL → I-GF0: Adım 1-3 (overlay + blur + pause)
-* [ ] 00X → | Bluff → GAME FEEL → I-GF0: Adım 4 (yavaş flip animasyonu)
-* [ ] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5a sonuç gerçek pişti (parlama + "+20 GERÇEK!" yazısı + shake + ses)
-* [ ] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5b sonuç sahte/yakalandı (kırmızı tint + "YAKALANDI!" yazısı + kırmızı flash + busted ses)
-* [ ] 00X → | Bluff → GAME FEEL → I-GF0: Adım 6-9 (sindirme → pile toplama → overlay kaldır → devam)
+* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 1-3 (overlay + blur + pause)
+* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 4 (yavaş flip animasyonu)
+* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5a sonuç gerçek pişti (parlama + "+20 GERÇEK!" yazısı + shake + ses I-S2'de)
+* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 5b sonuç sahte/yakalandı (kırmızı tint + "YAKALANDI!" yazısı + kırmızı flash + busted ses I-S2'de)
+* [x] 00X → | Bluff → GAME FEEL → I-GF0: Adım 6-9 (sindirme → pile toplama → overlay kaldır → devam)
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Her atılan kart öncekinin üstüne hafif offset ile binmeli (3-5px x/y + 2-4 derece rotation)
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Son atılan kart en üstte, alttaki kartların kenarları görünmeli
 * [ ] 00X → | Bluff → GAME FEEL → I-GF1: Pile 5+ kart olunca compact moda geç (offset azalır, kenarları hala görülsün)
